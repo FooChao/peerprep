@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardTitle, CardHeader, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import Link from "next/link";
 
 export default function LoginForm() {
 
@@ -34,10 +35,19 @@ export default function LoginForm() {
                             </Input>
                         </div>
 
-                        <div className="flex justify-center mt-10">
-                            <Button>
+                        <div className="flex justify-center ">
+                            <Button className="w-full"> 
                                 Login
                             </Button>
+                        </div>
+
+                        <div className="flex">
+                            <div>
+                                Don't have an account?
+                            </div>
+                            <Link href="/auth/signup" className="ml-3 text-blue-500 hover:underline">
+                                Signup
+                            </Link>
                         </div>
 
                     </div>
