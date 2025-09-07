@@ -1,3 +1,5 @@
+import HistoryPage from "../components/home/HistoryPage";
+import QuickActionsPage from "../components/home/QuickActionsPage";
 import StatisticPage from "../components/home/StatisticPage";
 import WelcomePage from "../components/home/WelcomePage";
 
@@ -22,6 +24,11 @@ export default function HomePage() {
             <WelcomePage/>
 
             <StatisticPage/>
+
+            <div className="flex flex-1 m-10">
+                <HistoryPage/>
+                <QuickActionsPage/>
+            </div>
 
 
         </div>
