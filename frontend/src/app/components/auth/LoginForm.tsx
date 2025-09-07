@@ -1,4 +1,4 @@
-"use cilent";
+"use client";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardTitle, CardHeader, CardContent } from "@/components/ui/card";
@@ -8,6 +8,10 @@ import Link from "next/link";
 
 export default function LoginForm() {
 
+
+    function handleLogin() {
+        window.location.href = "/home";
+    };
 
     return (
         <Card className="min-h-[50%] min-w-[40%]">
@@ -36,14 +40,14 @@ export default function LoginForm() {
                         </div>
 
                         <div className="flex justify-center ">
-                            <Button className="w-full"> 
+                            <Button onClick={() => handleLogin()} className="w-full"> 
                                 Login
                             </Button>
                         </div>
 
                         <div className="flex">
                             <div>
-                                Don't have an account?
+                                Do not have an account?
                             </div>
                             <Link href="/auth/signup" className="ml-3 text-blue-500 hover:underline">
                                 Signup
