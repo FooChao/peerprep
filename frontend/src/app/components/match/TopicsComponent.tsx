@@ -1,6 +1,5 @@
 "use client";
 
-import { IoIosSettings } from "react-icons/io";
 import { CiBookmark } from "react-icons/ci";
 import {
   Card,
