@@ -1,7 +1,7 @@
-import HistoryPage from "../components/home/HistoryPage";
-import QuickActionsPage from "../components/home/QuickActionsPage";
-import StatisticPage from "../components/home/StatisticPage";
-import WelcomePage from "../components/home/WelcomePage";
+import HistoryPage from "../components/home/HistoryComponent";
+import QuickActionsPage from "../components/home/QuickActionsComponent";
+import StatisticPage from "../components/home/StatisticComponent";
+import WelcomePage from "../components/home/WelcomeComponent";
 
 export default function HomePage() {
   return (

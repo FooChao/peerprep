@@ -15,7 +15,7 @@ export default function LoginForm() {
     <Card className="min-h-[50%] min-w-[40%]">
       <CardHeader className="mt-5">
         <CardTitle className="text-center text-4xl font-bold">
-          Welcome to Peerprep
+          Welcome to PeerPrep
         </CardTitle>
       </CardHeader>
 
