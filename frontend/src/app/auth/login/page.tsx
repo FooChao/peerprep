@@ -4,13 +4,13 @@ import Image from "next/image";
 export default function LoginPage() {
   return (
     <div className="h-screen flex flex-col items-center justify-center">
-      <Image 
-        src="/PeerPrepLogo.png" 
-        alt="PeerprepLogo" 
+      <Image
+        src="/PeerPrepLogo.png"
+        alt="PeerprepLogo"
         width={200}
         height={200}
       />
-      <LoginForm/>
+      <LoginForm />
     </div>
   );
 }
