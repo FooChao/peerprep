@@ -1,0 +1,1 @@
+2025/09/12 14:42:38 [error] 16908#20844: *1 CreateFile() "C:\Users\Admin\Desktop\cs3219-ay2526s1-project-g01\api-gateway/html/favicon.ico" failed (2: The system cannot find the file specified), client: 127.0.0.1, server: localhost, request: "GET /favicon.ico HTTP/1.1", host: "localhost", referrer: "http://localhost/"
