@@ -1,32 +1,43 @@
+# PeerPrep Docker Compose Configuration
 services:
+  # Frontend Next.js Application
+  # Scalable service with port range mapping
+  # container_name is omitted for scaling
+  # which is important for peerprep where we do matching
   frontend:
     image: honeydews/frontend
     pull_policy: always
-    container_name: peerprep-frontend
     build:
       context: ./frontend
       dockerfile: Dockerfile
-      target: runner
+      target: runner # Production build target
     ports:
-      - "3000:3000"
-
+      - "3000-3001:3000" # Port range for scaling (use --scale frontend=N)
+  
+  # MongoDB Database for User Services
   mongodb-user-services:
     image: mongo:7.0.12
     container_name: peerprep-mongodb-user-services
     volumes:
-      - mongodb-data-user-services:/data/db
+      - mongodb-data-user-services:/data/db # Persistent data storage
     env_file:
-      - ./mongodb/.env
+      - ./mongodb/.env # Database credentials
+    profiles:
+      - localdb # Only runs with --profile localdb
 
+  # MongoDB Web Admin Interface
   mongo-express:
     image: mongo-express:1.0.2
     container_name: peerprep-mongo-express
     ports:
-      - "8081:8081"
+      - "8081:8081" # Web interface on localhost:8081
     env_file:
-      - ./mongo-express/.env
+      - ./mongo-express/.env # Connection settings
     depends_on:
-      - mongodb-user-services
+      - mongodb-user-services # Requires MongoDB to be running
+    profiles:
+      - localdb # Only runs with --profile localdb
 
+# Named volumes for data persistence
 volumes:
   mongodb-data-user-services:
