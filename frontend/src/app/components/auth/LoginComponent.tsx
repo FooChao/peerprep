@@ -14,15 +14,56 @@ import { Label } from "@/components/ui/label";
 import { Eye, EyeOff } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { login } from "@/services/userServiceApi";
+import { handleApiError, handleApiSuccess } from "@/services/errorHandler";
+import { toast } from "sonner";
+import  { addToken } from "@/services/userServiceCookies";
 
 export default function LoginForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+
+  const router = useRouter();
   
-  function handleLogin() {
-    window.location.href = "/home";
-  }
+  const handleLogin = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    
+    // Basic validation
+    if (!email || !password) {
+      toast.error("Please fill in all fields");
+      return;
+    }
+
+    try {
+      const response = await login(email, password);
+            
+      // Check if we got a token
+      const token = response?.data?.data?.accessToken || response?.data?.accessToken;
+      if (!token) {
+        toast.error("Login failed: No token received");
+        return;
+      }
+
+      // Store token and show success
+      addToken(token);
+      handleApiSuccess(
+        "Login successful!", 
+        `Welcome back! Redirecting to homepage...`,
+        response.data
+      );
+
+      // Redirect after short delay
+      setTimeout(() => {
+        router.push("/home");
+      }, 1000);
+
+    } catch (error) {
+      console.error('Login error details:', error);
+      handleApiError(error, "Login failed");
+    }
+  };
 
   return (
     <Card className="min-h-[50%] min-w-[40%]">
@@ -72,7 +113,7 @@ export default function LoginForm() {
             </div>
 
             <div className="flex justify-center ">
-              <Button onClick={() => handleLogin()} className="w-full">
+              <Button onClick={handleLogin} className="w-full">
                 Login
               </Button>
             </div>
