@@ -16,7 +16,6 @@ export async function middleware(request: NextRequest) {
 
     // Allow access to auth routes without token
     if (isAuthRoute) {
-        console.log("✅ Auth route - allowing access");
         return NextResponse.next();
     }
 
