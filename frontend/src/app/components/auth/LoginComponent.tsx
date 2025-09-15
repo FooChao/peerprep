@@ -69,8 +69,10 @@ export default function LoginForm() {
 
       // Redirect after short delay
       setTimeout(() => {
+        // clear the toast
+        toast.dismiss();
         router.push("/home");
-      }, 1000);
+      }, 500);
 
     } catch (error) {
       console.error('Login error details:', error);
