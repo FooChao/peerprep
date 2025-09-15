@@ -139,9 +139,9 @@ export default function SignupForm() {
                     ))}
                 </Button>
               </div>
-              
+
               {/* Password strength requirements */}
-              {isPasswordFocused && !isPasswordValid && (
+              {(isPasswordFocused || password !== '') && !isPasswordValid && (
                 <div className="mt-3 space-y-2">
                   <div className="text-xs font-medium text-gray-700 mb-2">Password Requirements:</div>
                   <div className="grid grid-cols-1 gap-1 text-xs">
