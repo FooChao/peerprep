@@ -13,14 +13,19 @@ export default function SignupForm() {
     window.location.href = "/auth/login";
   }
 
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  //#region states
+  // main state
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [passwordMatchError, setPasswordMatchError] = useState('');
+
+  // UI password states
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isPasswordFocused, setIsPasswordFocused] = useState(false);
+  //  password validation states
+  const [passwordMatchError, setPasswordMatchError] = useState('');
   const [passwordValidation, setPasswordValidation] = useState({
     length: false,
     uppercase: false,
@@ -29,8 +34,13 @@ export default function SignupForm() {
     special: false
   });
 
-  const isPasswordsMatch = password === confirmPassword;
+  //#endregion
 
+  //#region derived states
+  const isPasswordsMatch = password === confirmPassword;
+  //#endregion
+
+  //#region regex
   // Password validation regex patterns
   const passwordRegex = {
     length: /.{8,}/, // At least 8 characters
@@ -39,7 +49,9 @@ export default function SignupForm() {
     number: /\d/, // At least one number
     special: /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/ // At least one special character
   };
+  //#endregion
 
+  //#region methods
   // Check if password meets all requirements
   const isPasswordValid = Object.values(passwordValidation).every(Boolean);
 
@@ -72,6 +84,7 @@ export default function SignupForm() {
       setPasswordMatchError('');
     }
   };
+  //#endregion
 
   return (
 
