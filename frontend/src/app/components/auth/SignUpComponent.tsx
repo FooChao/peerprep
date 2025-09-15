@@ -19,6 +19,7 @@ import React, { useState } from "react";
 import { toast } from "sonner";
 import { signup } from "@/services/userServiceApi";
 import { handleApiError, handleApiSuccess } from "@/services/errorHandler";
+import Link from "next/link";
 
 export default function SignupForm() {
 
@@ -171,6 +172,7 @@ export default function SignupForm() {
   }
   //#endregion
 
+  //#region rendering
   return (
 
     <Card className="w-[80%] max-w-[500px]">
@@ -320,18 +322,17 @@ export default function SignupForm() {
             {/* Navigate to login page */}
             <div className="flex justify-center mt-4">
               <div className="text-sm text-muted-foreground">Already have an account?</div>
-              <Button 
-                type="button"
-                variant="link" 
-                className="ml-3 p-0 h-auto text-sm text-blue-500 hover:underline"
-                onClick={NavigateToLogin}
-              >
-                Sign in here
-              </Button>
+                <Link 
+                href="/auth/login"
+                className="ml-3 text-blue-500 hover:underline"
+                >
+                  Sign in here
+                </Link>
             </div>
           </div>
         </form>
       </CardContent>
     </Card>
   );
+  //#endregion
 }

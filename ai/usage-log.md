@@ -238,3 +238,30 @@ Request to implement simple cookie utilities for JWT token storage and removal, 
 - Validated cookie naming convention matches middleware token reading logic
 - Confirmed simplicity over complexity for basic token storage requirements
 - Maintainability: simple two-function API for easy integration across application
+
+---
+
+## Entry 8
+
+# Date/Time:
+2025-09-15 22:30
+
+# Tool:
+GitHub Copilot (model: Claude 3.5 Sonnet)
+
+# Prompt/Command:
+Request to implement controlled state management and password visibility toggle in login component, maintaining consistency with signup component patterns.
+
+# Output Summary:
+- Added controlled state for email and password fields with proper value/onChange handlers
+- Implemented password visibility toggle with Eye/EyeOff icons (consistent with SignUpComponent)
+- Updated input components to use state values and change handlers
+
+# Action Taken:
+- [x] Accepted as-is
+- [ ] Modified
+- [ ] Rejected
+
+# Author Notes:
+- Maintained consistency between login and signup component patterns
+- Simple state management improvement for better form control
