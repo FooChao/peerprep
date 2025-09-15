@@ -18,7 +18,7 @@ import { Eye, EyeOff, UserPlus, AlertCircle, Check, X } from "lucide-react";
 import React, { useState } from "react";
 import { toast } from "sonner";
 import { signup } from "@/services/userServiceApi";
-import { handleApiError, handleApiSuccess } from "@/utils/errorHandler";
+import { handleApiError, handleApiSuccess } from "@/services/errorHandler";
 
 export default function SignupForm() {
 
