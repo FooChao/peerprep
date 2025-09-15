@@ -1,6 +1,20 @@
 # PeerPrep Docker Compose Configuration
 # TODO: when deploying to production, switch to using images from Docker Hub -> using 'image' and 'pull_policy' and remove 'build' sections
 services:
+  # API Gateway - Routes all external traffic
+  api-gateway:
+    image: honeydews/api-gateway:latest
+    pull_policy: always
+    ports:
+      - "80:80"   # HTTP traffic
+      - "443:443" # HTTPS traffic (if configured)
+    depends_on:
+      - frontend
+      - user-service
+    environment:
+      - FRONTEND_URL=http://frontend:3000
+      - USER_SERVICE_URL=http://user-service:4000
+
   # Frontend Next.js Application
   # Scalable service with port range mapping
   # container_name is omitted for scaling
@@ -12,8 +26,11 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
       target: runner # Production build target
-    ports:
-      - "3000-3001:3000" # Port range for scaling (use --scale frontend=N)
+    # Remove external port exposure - accessed via API Gateway
+    expose:
+      - "3000" # Internal port only
+    environment:
+      - NODE_ENV=production # Set Node.js to production mode
 
   user-service:
     image: foochao/user-service
@@ -23,10 +40,13 @@ services:
       dockerfile: Dockerfile
       # Use the runner stage from the multi-stage Dockerfile (not production)
       target: runner
-    ports:
-      - "4000:4000" # Expose user-service on port 3001 (matches your app)
+    # Remove external port exposure - accessed via API Gateway
+    expose:
+      - "4000" # Internal port only
     env_file:
       - ./user-service/.env # Environment variables for user-service
+    environment:
+      - NODE_ENV=production # Set Node.js to production mode
   
   # MongoDB Database for User Services
   mongodb-user-services:
@@ -43,8 +63,8 @@ services:
   mongo-express:
     image: mongo-express:1.0.2
     container_name: peerprep-mongo-express
-    ports:
-      - "8081:8081" # Web interface on localhost:8081
+    expose:
+      - "8081" # Internal port only - accessed via API Gateway at /admin/
     env_file:
       - ./mongo-express/.env # Connection settings
     depends_on:
