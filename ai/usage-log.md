@@ -100,3 +100,112 @@ GitHub Copilot (model: Claude Sonnet 4)
 - Clean script properly removes node_modules from all service directories
 - install:all script ensures all dependencies are installed across services
 - Improves developer experience with single command for multi-service development
+
+---
+
+## Entry 4
+
+# Date/Time:
+2025-09-15 18:45
+
+# Tool:
+GitHub Copilot (model: Claude 3.5 Sonnet)
+
+# Prompt/Command:
+Request to implement toast notifications for signup form validation with top-center positioning and custom styling, replacing disabled button with specific error feedback.
+
+# Output Summary:
+- Sonner toast library integration in Next.js layout.tsx
+- Custom toast positioning (top-center) with enhanced visual styling
+- Password complexity validation with detailed toast feedback
+- Custom CSS styling with backdrop blur, hover effects, and type-specific border colors
+- Toast configuration with rich colors, close button, and 4-second duration
+- Individual validation checks replacing single disabled button state
+
+# Action Taken:
+- [x] Accepted as-is
+- [ ] Modified
+- [ ] Rejected
+
+# Author Notes:
+- Validated toast notification UX improves over disabled button approach
+- Confirmed Sonner library is modern and well-maintained for React/Next.js
+- Reviewed custom CSS for accessibility and visual consistency
+- Tested toast positioning and timing for optimal user experience
+- Security implications minimal (client-side UI feedback only)
+- Enhanced user experience with specific, actionable error messages
+
+---
+
+## Entry 5
+
+# Date/Time:
+2025-09-15 19:15
+
+# Tool:
+GitHub Copilot (model: Claude 3.5 Sonnet)
+
+# Prompt/Command:
+Request to implement comprehensive signup form improvements including controlled inputs, debounced password validation, password complexity requirements with visual indicators, and enhanced UX patterns.
+
+# Output Summary:
+- Converted all form inputs to controlled React components with proper state management
+- Implemented DebouncedInput component for confirm password field with 300ms delay
+- Added password complexity validation using regex patterns (length, uppercase, lowercase, number, special characters)
+- Dynamic password requirements display with focus/blur states and visual indicators (Check/X icons)
+- Password visibility toggle buttons for both password fields
+- Real-time password match validation with error messaging
+- Enhanced form validation logic with proper state synchronization
+- Improved accessibility with proper labeling and error states
+
+# Action Taken:
+- [ ] Accepted as-is
+- [x] Modified
+- [ ] Rejected
+
+# Author Notes:
+- Validated all form state management follows React best practices
+- Confirmed password regex patterns meet common security requirements
+- Tested debounced validation prevents excessive API calls or state updates
+- Reviewed accessibility features for screen readers and keyboard navigation
+- Performance optimized with proper useCallback and state dependencies
+- UX improvements provide clear visual feedback for password requirements
+- Security considerations: client-side validation only, server validation still required
+
+---
+
+## Entry 6
+
+# Date/Time:
+2025-09-15 20:30
+
+# Tool:
+GitHub Copilot (model: Claude 3.5 Sonnet)
+
+# Prompt/Command:
+Request to create reusable error handling utilities for consistent API error management and user feedback across the application.
+
+# Output Summary:
+- Created comprehensive error handling utility (/utils/errorHandler.ts)
+- Implemented extractErrorInfo function for normalizing different error types
+- Added handleApiError function with smart error detection and toast notifications
+- Created handleApiSuccess function for consistent success feedback
+- Added withErrorHandling and withLoadingAndErrorHandling wrapper functions
+- Integrated TypeScript interfaces for error responses
+- Implemented status-specific error titles (Conflict, Validation Error, etc.)
+- Added automatic toast management with loading state handling
+- Updated SignUpComponent to use new error handling utilities
+
+# Action Taken:
+- [x] Accepted as-is
+- [ ] Modified
+- [ ] Rejected
+
+# Author Notes:
+- Validated error handling covers all HTTP status codes and network scenarios
+- Confirmed TypeScript type safety for all error and response scenarios
+- Reviewed reusable utility functions for DRY principle adherence
+- Performance considerations: automatic loading toast dismissal prevents UI conflicts
+- Security implications minimal: client-side error handling only
+- UX improvements: consistent error messaging and user feedback across application
+- Maintainability: centralized error handling logic for easy updates

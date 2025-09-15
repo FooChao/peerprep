@@ -1,3 +1,12 @@
+/**
+ * AI Assistance Disclosure:
+ * Tool: GitHub Copilot (model: Claude 3.5 Sonnet), date: 2025-09-15
+ * Purpose: To implement comprehensive signup form improvements including controlled inputs, 
+ *  debounced password validation, password complexity requirements with visual indicators,
+ *  and enhanced UX patterns.
+ * Author Review: I validated correctness, security, and performance of the code.
+ */
+
 "use client";
 
 import { Button } from "@/components/ui/button";
@@ -6,12 +15,12 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { DebouncedInput } from "@/components/ui/debouncedInput";
 import { Eye, EyeOff, UserPlus, AlertCircle, Check, X } from "lucide-react";
-import { useState } from "react";
+import React, { useState } from "react";
+import { toast } from "sonner";
+import { signup } from "@/services/userServiceApi";
+import { handleApiError, handleApiSuccess } from "@/utils/errorHandler";
 
 export default function SignupForm() {
-  function NavigateToLogin() {
-    window.location.href = "/auth/login";
-  }
 
   //#region states
   // main state
@@ -51,7 +60,7 @@ export default function SignupForm() {
   };
   //#endregion
 
-  //#region methods
+  //#region password methods
   // Check if password meets all requirements
   const isPasswordValid = Object.values(passwordValidation).every(Boolean);
 
@@ -84,6 +93,82 @@ export default function SignupForm() {
       setPasswordMatchError('');
     }
   };
+  //#endregion
+
+  //#region other methods
+  const NavigateToLogin = (e: React.MouseEvent) => {
+    e.preventDefault();
+    window.location.href = "/auth/login";
+  };
+
+  const onRegister = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    // Specific validation checks with toast messages
+    if (!username) {
+      toast.error("Username is required!", {
+        description: "Please enter a username to continue."
+      });
+      return;
+    }
+
+    if (!email) {
+      toast.error("Email is required!", {
+        description: "Please enter your email address."
+      });
+      return;
+    }
+
+    if (!password) {
+      toast.error("Password is required!", {
+        description: "Please create a password for your account."
+      });
+      return;
+    }
+
+    if (!isPasswordValid) {
+      toast.error("Password doesn't meet requirements!", {
+        description: "Please check the password requirements below."
+      });
+      return;
+    }
+
+    if (!confirmPassword) {
+      toast.error("Please confirm your password!", {
+        description: "Enter your password again to confirm."
+      });
+      return;
+    }
+
+    if (!isPasswordsMatch) {
+      toast.error("Passwords don't match!", {
+        description: "Please make sure both password fields are identical."
+      });
+      return;
+    }
+
+    try {
+      
+      // sign up using apis - Axios automatically parses JSON
+      const response = await signup(username, email, password);
+
+      // Use reusable success handler
+      handleApiSuccess(
+        response.data.message || "Account created successfully!",
+        `Welcome ${response.data.data?.username}! You can now sign in.`,
+        response.data.data
+      );
+
+      //Redirect to login after short delay (commented out for testing)
+      setTimeout(() => {
+        window.location.href = "/auth/login";
+      }, 1500);
+
+    } catch (error: unknown) {
+      // Use reusable error handler
+      handleApiError(error, "Failed to create account");
+    }
+
+  }
   //#endregion
 
   return (
@@ -225,7 +310,7 @@ export default function SignupForm() {
             <div className="flex justify-center mt-4">
               <Button 
                 className="w-full" 
-                disabled={!isPasswordValid || !isPasswordsMatch || !username || !email || !password || !confirmPassword}
+                onClick={onRegister}
               >
                 <UserPlus className="mr-2 h-4 w-4" />
                 Register
@@ -236,12 +321,10 @@ export default function SignupForm() {
             <div className="flex justify-center mt-4">
               <div className="text-sm text-muted-foreground">Already have an account?</div>
               <Button 
+                type="button"
                 variant="link" 
                 className="ml-3 p-0 h-auto text-sm text-blue-500 hover:underline"
-                onClick={(e) => {
-                  e.preventDefault();
-                  NavigateToLogin();
-                }}
+                onClick={NavigateToLogin}
               >
                 Sign in here
               </Button>

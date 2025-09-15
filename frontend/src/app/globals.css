@@ -1,3 +1,10 @@
+/**
+ * AI Assistance Disclosure:
+ * Tool: GitHub Copilot (model: Claude 3.5 Sonnet), date: 2025-09-15
+ * Purpose: To implement custom toast notification styling with enhanced visual effects and type-specific colors.
+ * Author Review: I validated correctness, security, and performance of the code.
+ */
+
 @import "tailwindcss";
 @import "tw-animate-css";
 
@@ -127,4 +134,34 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+/* Custom Toast Styling */
+.toast-custom {
+  backdrop-filter: blur(8px);
+  background: rgba(255, 255, 255, 0.95) !important;
+  border: 1px solid rgba(0, 0, 0, 0.1) !important;
+  transition: all 0.2s ease-in-out;
+}
+
+.toast-custom:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.15) !important;
+}
+
+/* Toast type specific styling */
+[data-sonner-toast][data-type="success"] .toast-custom {
+  border-left: 4px solid #22c55e !important;
+}
+
+[data-sonner-toast][data-type="error"] .toast-custom {
+  border-left: 4px solid #ef4444 !important;
+}
+
+[data-sonner-toast][data-type="loading"] .toast-custom {
+  border-left: 4px solid #3b82f6 !important;
+}
+
+[data-sonner-toast][data-type="info"] .toast-custom {
+  border-left: 4px solid #6366f1 !important;
 }
