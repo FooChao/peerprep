@@ -16,6 +16,7 @@ export async function middleware(request: NextRequest) {
 
     // Allow access to auth routes without token
     if (isAuthRoute) {
+        console.log("✅ Auth route - allowing access");
         return NextResponse.next();
     }
 
@@ -28,9 +29,8 @@ export async function middleware(request: NextRequest) {
     try {
         // Verify token with backend
         const response = await verifyToken(token);
-        console.log("Token verification response status:", response.status);
         
-        if (!response.ok) {
+        if (response.status !== 200) {
             // Token is invalid, redirect to login
             const loginUrl = new URL("/auth/login", request.url);
             return NextResponse.redirect(loginUrl);
@@ -58,4 +58,3 @@ export const config = {
         '/((?!auth|api|_next|favicon.ico).*)',
     ],
 }
-    
