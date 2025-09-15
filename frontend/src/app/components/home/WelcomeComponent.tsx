@@ -2,8 +2,11 @@
 
 import { Card, CardTitle, CardHeader, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { useUser } from "@/contexts/UserContext";
 
 export default function WelcomePage() {
+  const { user } = useUser();
+
   function directToHome() {
     window.location.href = "/match";
   }
@@ -13,7 +16,7 @@ export default function WelcomePage() {
       <CardHeader>
         <CardTitle className="text-4xl flex">
           Hello
-          <p className="ml-2 font-bold">Derrick Wong</p>
+          <p className="ml-2 font-bold">{user?.username || "Guest"}</p>
         </CardTitle>
         <CardTitle className="text-4xl flex">Ready to start coding?</CardTitle>
       </CardHeader>

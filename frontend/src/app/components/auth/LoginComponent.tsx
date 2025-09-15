@@ -18,7 +18,8 @@ import { useRouter } from "next/navigation";
 import { login } from "@/services/userServiceApi";
 import { handleApiError, handleApiSuccess } from "@/services/errorHandler";
 import { toast } from "sonner";
-import  { addToken } from "@/services/userServiceCookies";
+import { addToken } from "@/services/userServiceCookies";
+import { useUser } from "@/contexts/UserContext";
 
 export default function LoginForm() {
   const [email, setEmail] = useState("");
@@ -26,6 +27,7 @@ export default function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
 
   const router = useRouter();
+  const { setUser } = useUser();
   
   const handleLogin = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -46,8 +48,23 @@ export default function LoginForm() {
         return;
       }
 
-      // Store token and show success
+      // Store token
       addToken(token);
+
+      // Parse token to get user data and set in context
+      try {
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        if (payload.username && payload.email) {
+          setUser({
+            username: payload.username,
+            email: payload.email,
+          });
+        }
+      } catch (error) {
+        console.error("Error parsing token:", error);
+      }
+
+      // Show success message
       handleApiSuccess(
         "Login successful!", 
         `Welcome back! Redirecting to homepage...`,

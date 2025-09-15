@@ -244,24 +244,41 @@ Request to implement simple cookie utilities for JWT token storage and removal, 
 ## Entry 8
 
 # Date/Time:
-2025-09-15 22:30
+2025-09-16 00:05
 
 # Tool:
 GitHub Copilot (model: Claude Sonnet 4)
 
 # Prompt/Command:
-Request to implement controlled state management and password visibility toggle in login component, maintaining consistency with signup component patterns.
+Request to implement UserContext for managing user authentication state and create a global navigation bar that appears on all non-auth pages with conditional rendering.
 
 # Output Summary:
-- Added controlled state for email and password fields with proper value/onChange handlers
-- Implemented password visibility toggle with Eye/EyeOff icons (consistent with SignUpComponent)
-- Updated input components to use state values and change handlers
+- Created React UserContext (/contexts/UserContext.tsx) for centralized user state management
+- Implemented automatic token verification using verifyToken API
+- Added user data persistence across page refreshes with token-based restoration
+- Created Navbar component (/app/components/layout/Navbar.tsx) with PeerPrep branding and navigation
+- Implemented NavbarWrapper (/app/components/layout/NavbarWrapper.tsx) for conditional rendering
+- Updated root layout.tsx to include UserProvider and NavbarWrapper
+- Enhanced LoginComponent to set user data in context after successful authentication
+- Updated WelcomeComponent to display actual username from UserContext instead of hardcoded name
+- Fixed cookie utilities with getToken function for token retrieval
 
 # Action Taken:
-- [x] Accepted as-is
-- [ ] Modified
+- [ ] Accepted as-is
+- [x] Modified
 - [ ] Rejected
 
 # Author Notes:
-- Maintained consistency between login and signup component patterns
-- Simple state management improvement for better form control
+- Validated UserContext properly handles token verification through API calls rather than JWT parsing
+- Confirmed conditional navbar rendering excludes auth pages (/auth/*) as required
+- Reviewed user state persistence across page refreshes and browser sessions
+- Tested integration between LoginComponent, UserContext, and display components
+- Security considerations: Token verification through backend API ensures data integrity
+- UX improvements: Consistent navigation experience with user-aware display elements
+- Maintainability: Centralized user state management with clear separation of concerns
+- Debug logging enables easier troubleshooting of authentication state issues
+- Navbar modified by me after AI implementation to meet specific design requirements
+
+---
+
+
