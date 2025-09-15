@@ -1,5 +1,5 @@
 # AI Assistance Disclosure:
-# Tool: GitHub Copilot, date: 2025-09-15
+# Tool: GitHub Copilot(Claude Sonnet 4), date: 2025-09-15
 # Purpose: To create comprehensive .dockerignore for Express.js user-service build optimization.
 # Author Review: I validated file exclusions for security and build performance.
 

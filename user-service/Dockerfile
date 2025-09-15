@@ -1,7 +1,7 @@
 # syntax=docker.io/docker/dockerfile:1
 
 # AI Assistance Disclosure:
-# Tool: GitHub Copilot, date: 2025-09-15
+# Tool: GitHub Copilot (Claude Sonnet 4), date: 2025-09-15
 # Purpose: To create optimized multi-stage Docker configuration for Express.js user-service.
 # Author Review: I validated security, performance, and production readiness of the setup.
 

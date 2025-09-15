@@ -1,6 +1,6 @@
 /**
  * AI Assistance Disclosure:
- * Tool: GitHub Copilot (model: Claude 3.5 Sonnet), date: 2025-09-15
+ * Tool: GitHub Copilot (model: Claude Sonnet 4), date: 2025-09-15
  * Purpose: To implement reusable error handling utilities for consistent API error management and user feedback across the application.
  * Author Review: I validated correctness, security, and performance of the code.
  */

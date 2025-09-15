@@ -1,6 +1,6 @@
 /**
  * AI Assistance Disclosure:
- * Tool: GitHub Copilot (model: Claude 3.5 Sonnet), date: 2025-09-15
+ * Tool: GitHub Copilot (model: Claude 4 Sonnet), date: 2025-09-15
  * Purpose: To implement comprehensive signup form improvements including controlled inputs, 
  *  debounced password validation, password complexity requirements with visual indicators,
  *  and enhanced UX patterns.

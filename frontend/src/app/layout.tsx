@@ -1,6 +1,6 @@
 /**
  * AI Assistance Disclosure:
- * Tool: GitHub Copilot (model: Claude 3.5 Sonnet), date: 2025-09-15
+ * Tool: GitHub Copilot (model: Claude Sonnet 4), date: 2025-09-15
  * Purpose: To configure Sonner toast notifications with top-center positioning and custom styling options.
  * Author Review: I validated correctness, security, and performance of the code.
  */
