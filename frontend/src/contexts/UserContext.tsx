@@ -7,7 +7,13 @@
 
 "use client";
 
-import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  ReactNode,
+} from "react";
 import { getToken } from "@/services/userServiceCookies";
 import { verifyToken } from "@/services/userServiceApi";
 
@@ -40,12 +46,12 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
 
   useEffect(() => {
     console.log("UserContext useEffect triggered, current user:", user);
-    
+
     // If user context is empty but we have a token, fetch user data
     if (!user) {
       const token = getToken();
       console.log("Token from cookies:", token);
-      
+
       if (token) {
         console.log("Token found, calling verifyToken API...");
         verifyToken(token)

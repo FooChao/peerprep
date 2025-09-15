@@ -1,7 +1,7 @@
 /**
  * AI Assistance Disclosure:
  * Tool: GitHub Copilot (model: Claude 4 Sonnet), date: 2025-09-15
- * Purpose: To implement comprehensive signup form improvements including controlled inputs, 
+ * Purpose: To implement comprehensive signup form improvements including controlled inputs,
  *  debounced password validation, password complexity requirements with visual indicators,
  *  and enhanced UX patterns.
  * Author Review: I validated correctness, security, and performance of the code.
@@ -27,23 +27,23 @@ export default function SignupForm() {
 
   //#region states
   // main state
-  const [username, setUsername] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
 
   // UI password states
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isPasswordFocused, setIsPasswordFocused] = useState(false);
   //  password validation states
-  const [passwordMatchError, setPasswordMatchError] = useState('');
+  const [passwordMatchError, setPasswordMatchError] = useState("");
   const [passwordValidation, setPasswordValidation] = useState({
     length: false,
     uppercase: false,
     lowercase: false,
     number: false,
-    special: false
+    special: false,
   });
 
   //#endregion
@@ -59,7 +59,7 @@ export default function SignupForm() {
     uppercase: /[A-Z]/, // At least one uppercase letter
     lowercase: /[a-z]/, // At least one lowercase letter
     number: /\d/, // At least one number
-    special: /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/ // At least one special character
+    special: /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/, // At least one special character
   };
   //#endregion
 
@@ -73,7 +73,7 @@ export default function SignupForm() {
     if (password && value && password !== value) {
       setPasswordMatchError("Passwords do not match");
     } else {
-      setPasswordMatchError('');
+      setPasswordMatchError("");
     }
   };
 
@@ -81,19 +81,19 @@ export default function SignupForm() {
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newPassword = e.target.value;
     setPassword(newPassword);
-    
+
     // Validate password complexity
     setPasswordValidation({
       length: passwordRegex.length.test(newPassword),
       uppercase: passwordRegex.uppercase.test(newPassword),
       lowercase: passwordRegex.lowercase.test(newPassword),
       number: passwordRegex.number.test(newPassword),
-      special: passwordRegex.special.test(newPassword)
+      special: passwordRegex.special.test(newPassword),
     });
-    
+
     // Clear error if passwords now match
     if (confirmPassword && newPassword === confirmPassword) {
-      setPasswordMatchError('');
+      setPasswordMatchError("");
     }
   };
   //#endregion
@@ -104,48 +104,47 @@ export default function SignupForm() {
     // Specific validation checks with toast messages
     if (!username) {
       toast.error("Username is required!", {
-        description: "Please enter a username to continue."
+        description: "Please enter a username to continue.",
       });
       return;
     }
 
     if (!email) {
       toast.error("Email is required!", {
-        description: "Please enter your email address."
+        description: "Please enter your email address.",
       });
       return;
     }
 
     if (!password) {
       toast.error("Password is required!", {
-        description: "Please create a password for your account."
+        description: "Please create a password for your account.",
       });
       return;
     }
 
     if (!isPasswordValid) {
       toast.error("Password doesn't meet requirements!", {
-        description: "Please check the password requirements below."
+        description: "Please check the password requirements below.",
       });
       return;
     }
 
     if (!confirmPassword) {
       toast.error("Please confirm your password!", {
-        description: "Enter your password again to confirm."
+        description: "Enter your password again to confirm.",
       });
       return;
     }
 
     if (!isPasswordsMatch) {
       toast.error("Passwords don't match!", {
-        description: "Please make sure both password fields are identical."
+        description: "Please make sure both password fields are identical.",
       });
       return;
     }
 
     try {
-      
       // sign up using apis - Axios automatically parses JSON
       const response = await signup(username, email, password);
 
@@ -153,27 +152,23 @@ export default function SignupForm() {
       handleApiSuccess(
         response.data.message || "Account created successfully!",
         `Welcome ${response.data.data?.username}! You can now sign in.`,
-        response.data.data
+        response.data.data,
       );
 
       //Redirect to login after short delay (commented out for testing)
       setTimeout(() => {
         router.push("/auth/login");
       }, 1500);
-
     } catch (error: unknown) {
       // Use reusable error handler
       handleApiError(error, "Failed to create account");
     }
-
-  }
+  };
   //#endregion
 
   //#region rendering
   return (
-
     <Card className="w-[80%] max-w-[500px]">
-
       {/*Header */}
       <CardHeader className="mt-5">
         <CardTitle className="text-center text-4xl font-bold">
@@ -184,13 +179,12 @@ export default function SignupForm() {
       <CardContent className="px-15 pt-10">
         <form>
           <div className="flex flex-col gap-4">
-
             {/* Username input */}
             <div>
               <Label className="m-2">Username</Label>
-              <Input 
-                name="username" 
-                type="text" 
+              <Input
+                name="username"
+                type="text"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 required
@@ -200,9 +194,9 @@ export default function SignupForm() {
             {/* Email input */}
             <div>
               <Label className="m-2">Email</Label>
-              <Input 
-                name="email" 
-                type="email" 
+              <Input
+                name="email"
+                type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
@@ -229,37 +223,70 @@ export default function SignupForm() {
                   className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8 hover:bg-transparent"
                   onClick={() => setShowPassword(!showPassword)}
                 >
-                    {password && (showPassword ? (
-                    <EyeOff className="h-4 w-4" />
+                  {password &&
+                    (showPassword ? (
+                      <EyeOff className="h-4 w-4" />
                     ) : (
-                    <Eye className="h-4 w-4" />
+                      <Eye className="h-4 w-4" />
                     ))}
                 </Button>
               </div>
 
               {/* Password strength requirements */}
-              {(isPasswordFocused || password !== '') && !isPasswordValid && (
+              {(isPasswordFocused || password !== "") && !isPasswordValid && (
                 <div className="mt-3 space-y-2">
-                  <div className="text-xs font-medium text-gray-700 mb-2">Password Requirements:</div>
+                  <div className="text-xs font-medium text-gray-700 mb-2">
+                    Password Requirements:
+                  </div>
                   <div className="grid grid-cols-1 gap-1 text-xs">
-                    <div className={`flex items-center ${passwordValidation.length ? 'text-green-600' : 'text-red-500'}`}>
-                      {passwordValidation.length ? <Check className="h-3 w-3 mr-1" /> : <X className="h-3 w-3 mr-1" />}
+                    <div
+                      className={`flex items-center ${passwordValidation.length ? "text-green-600" : "text-red-500"}`}
+                    >
+                      {passwordValidation.length ? (
+                        <Check className="h-3 w-3 mr-1" />
+                      ) : (
+                        <X className="h-3 w-3 mr-1" />
+                      )}
                       At least 8 characters
                     </div>
-                    <div className={`flex items-center ${passwordValidation.uppercase ? 'text-green-600' : 'text-red-500'}`}>
-                      {passwordValidation.uppercase ? <Check className="h-3 w-3 mr-1" /> : <X className="h-3 w-3 mr-1" />}
+                    <div
+                      className={`flex items-center ${passwordValidation.uppercase ? "text-green-600" : "text-red-500"}`}
+                    >
+                      {passwordValidation.uppercase ? (
+                        <Check className="h-3 w-3 mr-1" />
+                      ) : (
+                        <X className="h-3 w-3 mr-1" />
+                      )}
                       One uppercase letter (A-Z)
                     </div>
-                    <div className={`flex items-center ${passwordValidation.lowercase ? 'text-green-600' : 'text-red-500'}`}>
-                      {passwordValidation.lowercase ? <Check className="h-3 w-3 mr-1" /> : <X className="h-3 w-3 mr-1" />}
+                    <div
+                      className={`flex items-center ${passwordValidation.lowercase ? "text-green-600" : "text-red-500"}`}
+                    >
+                      {passwordValidation.lowercase ? (
+                        <Check className="h-3 w-3 mr-1" />
+                      ) : (
+                        <X className="h-3 w-3 mr-1" />
+                      )}
                       One lowercase letter (a-z)
                     </div>
-                    <div className={`flex items-center ${passwordValidation.number ? 'text-green-600' : 'text-red-500'}`}>
-                      {passwordValidation.number ? <Check className="h-3 w-3 mr-1" /> : <X className="h-3 w-3 mr-1" />}
+                    <div
+                      className={`flex items-center ${passwordValidation.number ? "text-green-600" : "text-red-500"}`}
+                    >
+                      {passwordValidation.number ? (
+                        <Check className="h-3 w-3 mr-1" />
+                      ) : (
+                        <X className="h-3 w-3 mr-1" />
+                      )}
                       One number (0-9)
                     </div>
-                    <div className={`flex items-center ${passwordValidation.special ? 'text-green-600' : 'text-red-500'}`}>
-                      {passwordValidation.special ? <Check className="h-3 w-3 mr-1" /> : <X className="h-3 w-3 mr-1" />}
+                    <div
+                      className={`flex items-center ${passwordValidation.special ? "text-green-600" : "text-red-500"}`}
+                    >
+                      {passwordValidation.special ? (
+                        <Check className="h-3 w-3 mr-1" />
+                      ) : (
+                        <X className="h-3 w-3 mr-1" />
+                      )}
                       One special character (!@#$%^&*)
                     </div>
                   </div>
@@ -287,9 +314,10 @@ export default function SignupForm() {
                   className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8 hover:bg-transparent"
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                 >
-                    {confirmPassword && (showConfirmPassword ? (
+                  {confirmPassword &&
+                    (showConfirmPassword ? (
                       <EyeOff className="h-4 w-4" />
-                      ) : (
+                    ) : (
                       <Eye className="h-4 w-4" />
                     ))}
                 </Button>
@@ -302,15 +330,11 @@ export default function SignupForm() {
                   {passwordMatchError}
                 </div>
               )}
-
             </div>
 
             {/* Register Button and already have an account*/}
             <div className="flex justify-center mt-4">
-              <Button 
-                className="w-full" 
-                onClick={onRegister}
-              >
+              <Button className="w-full" onClick={onRegister}>
                 <UserPlus className="mr-2 h-4 w-4" />
                 Register
               </Button>
@@ -318,13 +342,15 @@ export default function SignupForm() {
 
             {/* Navigate to login page */}
             <div className="flex justify-center mt-4">
-              <div className="text-sm text-muted-foreground">Already have an account?</div>
-                <Link 
+              <div className="text-sm text-muted-foreground">
+                Already have an account?
+              </div>
+              <Link
                 href="/auth/login"
                 className="ml-3 text-blue-500 hover:underline"
-                >
-                  Sign in here
-                </Link>
+              >
+                Sign in here
+              </Link>
             </div>
           </div>
         </form>

@@ -28,10 +28,10 @@ export default function LoginForm() {
 
   const router = useRouter();
   const { setUser } = useUser();
-  
+
   const handleLogin = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    
+
     // Basic validation
     if (!email || !password) {
       toast.error("Please fill in all fields");
@@ -40,9 +40,10 @@ export default function LoginForm() {
 
     try {
       const response = await login(email, password);
-            
+
       // Check if we got a token
-      const token = response?.data?.data?.accessToken || response?.data?.accessToken;
+      const token =
+        response?.data?.data?.accessToken || response?.data?.accessToken;
       if (!token) {
         toast.error("Login failed: No token received");
         return;
@@ -62,9 +63,9 @@ export default function LoginForm() {
 
       // Show success message
       handleApiSuccess(
-        "Login successful!", 
+        "Login successful!",
         `Welcome back! Redirecting to homepage...`,
-        response.data
+        response.data,
       );
 
       // Use router.replace instead of push for better Docker/Nginx compatibility
@@ -72,9 +73,8 @@ export default function LoginForm() {
         toast.dismiss();
         router.replace("/home");
       }, 1000);
-
     } catch (error) {
-      console.error('Login error details:', error);
+      console.error("Login error details:", error);
       handleApiError(error, "Login failed");
     }
   };
@@ -92,9 +92,9 @@ export default function LoginForm() {
           <div className="flex flex-col gap-4">
             <div>
               <Label className="m-2">Email</Label>
-              <Input 
-                name="email" 
-                type="email" 
+              <Input
+                name="email"
+                type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
@@ -103,8 +103,8 @@ export default function LoginForm() {
             <div>
               <Label className="m-2">Password</Label>
               <div className="relative">
-                <Input 
-                  name="password" 
+                <Input
+                  name="password"
                   type={showPassword ? "text" : "password"}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
@@ -117,11 +117,12 @@ export default function LoginForm() {
                   className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8 hover:bg-transparent"
                   onClick={() => setShowPassword(!showPassword)}
                 >
-                  {password && (showPassword ? (
-                    <EyeOff className="h-4 w-4" />
-                  ) : (
-                    <Eye className="h-4 w-4" />
-                  ))}
+                  {password &&
+                    (showPassword ? (
+                      <EyeOff className="h-4 w-4" />
+                    ) : (
+                      <Eye className="h-4 w-4" />
+                    ))}
                 </Button>
               </div>
             </div>

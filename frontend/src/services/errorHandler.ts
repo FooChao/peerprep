@@ -9,13 +9,13 @@
  * Utility functions for handling API errors consistently across the application
  */
 
-import { toast } from 'sonner';
+import { toast } from "sonner";
 
 // Type definitions for error handling
 export interface ErrorResponse {
   message: string;
   status?: number;
-  type: 'server' | 'network' | 'unknown';
+  type: "server" | "network" | "unknown";
 }
 
 /**
@@ -25,35 +25,36 @@ export interface ErrorResponse {
  */
 export function extractErrorInfo(error: unknown): ErrorResponse {
   // Handle Axios errors
-  if (error && typeof error === 'object' && 'response' in error) {
+  if (error && typeof error === "object" && "response" in error) {
     // Server responded with error status (400, 409, 500, etc.)
-    const axiosError = error as { 
-      response: { 
-        status: number; 
-        data?: { message?: string } 
-      } 
+    const axiosError = error as {
+      response: {
+        status: number;
+        data?: { message?: string };
+      };
     };
-    
+
     return {
       message: axiosError.response.data?.message || "Server error occurred",
       status: axiosError.response.status,
-      type: 'server'
+      type: "server",
     };
   }
-  
+
   // Handle network errors (no response received)
-  if (error && typeof error === 'object' && 'request' in error) {
+  if (error && typeof error === "object" && "request" in error) {
     return {
       message: "Unable to connect to server. Please check your connection.",
-      type: 'network'
+      type: "network",
     };
   }
-  
+
   // Handle other errors
-  const errorMessage = error instanceof Error ? error.message : "An unexpected error occurred";
+  const errorMessage =
+    error instanceof Error ? error.message : "An unexpected error occurred";
   return {
     message: errorMessage,
-    type: 'unknown'
+    type: "unknown",
   };
 }
 
@@ -64,28 +65,28 @@ export function extractErrorInfo(error: unknown): ErrorResponse {
  * @param customDescription - Optional custom description override
  */
 export function handleApiError(
-  error: unknown, 
+  error: unknown,
   customTitle?: string,
-  customDescription?: string
+  customDescription?: string,
 ): void {
   console.error("API Error:", error);
-  
+
   const errorInfo = extractErrorInfo(error);
-  
+
   // Dismiss any existing loading toasts
   toast.dismiss();
-  
+
   // Determine toast title and description
   let title = customTitle;
   const description = customDescription || errorInfo.message;
-  
+
   // Set default titles based on error type if not provided
   if (!title) {
     switch (errorInfo.type) {
-      case 'server':
+      case "server":
         title = getServerErrorTitle(errorInfo.status);
         break;
-      case 'network':
+      case "network":
         title = "Connection Error";
         break;
       default:
@@ -93,10 +94,10 @@ export function handleApiError(
         break;
     }
   }
-  
+
   // Show toast notification
   toast.error(title, {
-    description: description
+    description: description,
   });
 }
 
@@ -107,7 +108,7 @@ export function handleApiError(
  */
 function getServerErrorTitle(status?: number): string {
   if (!status) return "Server Error";
-  
+
   switch (status) {
     case 400:
       return "Invalid Request";
@@ -143,19 +144,19 @@ function getServerErrorTitle(status?: number): string {
 export function handleApiSuccess(
   message: string,
   description?: string,
-  userData?: { username?: string }
+  userData?: { username?: string },
 ): void {
   // Dismiss any existing loading toasts
   toast.dismiss();
-  
+
   // Enhance description with user data if available
   let finalDescription = description;
   if (userData?.username && !description) {
     finalDescription = `Welcome ${userData.username}!`;
   }
-  
+
   toast.success(message, {
-    description: finalDescription
+    description: finalDescription,
   });
 }
 
@@ -169,15 +170,15 @@ export function handleApiSuccess(
 export async function withErrorHandling<T>(
   operation: () => Promise<T>,
   errorTitle?: string,
-  successMessage?: string
+  successMessage?: string,
 ): Promise<T | null> {
   try {
     const result = await operation();
-    
+
     if (successMessage) {
       toast.success(successMessage);
     }
-    
+
     return result;
   } catch (error) {
     handleApiError(error, errorTitle);

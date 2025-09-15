@@ -32,40 +32,41 @@ export interface DebouncedInputProps extends React.ComponentProps<"input"> {
 }
 
 // Forward ref so this input can be used like a normal input (with refs)
-export const DebouncedInput = React.forwardRef<HTMLInputElement, DebouncedInputProps>(
-  ({ onDebouncedChange, debounceMs = 300, ...props }, ref) => {
-    // Internal state for input value
-    const [value, setValue] = React.useState(props.value?.toString() || "");
+export const DebouncedInput = React.forwardRef<
+  HTMLInputElement,
+  DebouncedInputProps
+>(({ onDebouncedChange, debounceMs = 300, ...props }, ref) => {
+  // Internal state for input value
+  const [value, setValue] = React.useState(props.value?.toString() || "");
 
-    // Sync with controlled value (if parent updates value prop)
-    React.useEffect(() => {
-      if (typeof props.value === "string" || typeof props.value === "number") {
-        setValue(props.value.toString());
-      }
-    }, [props.value]);
+  // Sync with controlled value (if parent updates value prop)
+  React.useEffect(() => {
+    if (typeof props.value === "string" || typeof props.value === "number") {
+      setValue(props.value.toString());
+    }
+  }, [props.value]);
 
-    // Debounced version of the value (only updates after debounceMs)
-    const debounced = useDebouncedValue(value, debounceMs);
+  // Debounced version of the value (only updates after debounceMs)
+  const debounced = useDebouncedValue(value, debounceMs);
 
-    // Fire debounced callback only when debounced value changes
-    React.useEffect(() => {
-      if (onDebouncedChange) onDebouncedChange(debounced);
-      // eslint-disable-next-line
-    }, [debounced]);
+  // Fire debounced callback only when debounced value changes
+  React.useEffect(() => {
+    if (onDebouncedChange) onDebouncedChange(debounced);
+    // eslint-disable-next-line
+  }, [debounced]);
 
-    return (
-      <Input
-        {...props} // Pass down all other props to shadcn/ui Input
-        ref={ref}
-        value={value}
-        // When user types: update local value and also call original onChange (if given)
-        onChange={e => {
-          setValue(e.target.value);
-          props.onChange?.(e); // Call parent onChange if supplied
-        }}
-      />
-    );
-  }
-);
+  return (
+    <Input
+      {...props} // Pass down all other props to shadcn/ui Input
+      ref={ref}
+      value={value}
+      // When user types: update local value and also call original onChange (if given)
+      onChange={(e) => {
+        setValue(e.target.value);
+        props.onChange?.(e); // Call parent onChange if supplied
+      }}
+    />
+  );
+});
 
 DebouncedInput.displayName = "DebouncedInput";

@@ -41,7 +41,7 @@ export default function RootLayout({
           <NavbarWrapper />
           {children}
         </UserProvider>
-        <Toaster 
+        <Toaster
           position="top-center"
           richColors
           closeButton
@@ -49,15 +49,16 @@ export default function RootLayout({
           duration={4000}
           toastOptions={{
             style: {
-              background: 'white',
-              border: '1px solid #e2e8f0',
-              borderRadius: '12px',
-              fontSize: '14px',
-              fontWeight: '500',
-              boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
-              padding: '16px',
+              background: "white",
+              border: "1px solid #e2e8f0",
+              borderRadius: "12px",
+              fontSize: "14px",
+              fontWeight: "500",
+              boxShadow:
+                "0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)",
+              padding: "16px",
             },
-            className: 'toast-custom',
+            className: "toast-custom",
           }}
         />
       </body>

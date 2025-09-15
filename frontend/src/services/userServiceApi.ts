@@ -7,7 +7,7 @@
 
 // API Configuration for PeerPrep Frontend
 // Based on docker-compose.yml configuration with API Gateway
-import axios from 'axios';
+import axios from "axios";
 
 // TypeScript interfaces for API responses
 export interface User {
@@ -25,52 +25,52 @@ export interface ApiResponse<T = unknown> {
 
 /**
  * Dynamic Base URL Detection
- * 
+ *
  * This function determines the correct API endpoint based on execution context:
  * - Server-side (middleware): Direct container-to-container communication
  * - Client-side (browser): Through API Gateway proxy
- * 
+ *
  * This fixes a Docker networking bug where the same code runs in different environments
  * and needs different URLs to reach the same service.
  */
 const getBaseURL = () => {
   // Check if we're running server-side (middleware) or client-side (browser)
-  const isServerSide = typeof window === 'undefined';
-  
-  if (process.env.NODE_ENV === 'production') {
+  const isServerSide = typeof window === "undefined";
+
+  if (process.env.NODE_ENV === "production") {
     if (isServerSide) {
       // Server-side: Direct call to user-service container
       // This bypasses the API gateway for internal Docker networking
-      return 'http://user-service:4000';
+      return "http://user-service:4000";
     } else {
       // Client-side: Through API Gateway
       // Browser requests go through the nginx proxy on localhost
-      return 'http://localhost/api';
+      return "http://localhost/api";
     }
   } else {
     // Development: Direct to user-service (no Docker containers)
-    return 'http://localhost:4000';
+    return "http://localhost:4000";
   }
 };
 
 /**
  * Dynamic Axios Client Creation
- * 
+ *
  * We create a new axios instance for each request instead of using a module-level singleton.
  * This is necessary because:
- * 
+ *
  * 1. The same module code runs in both server-side (middleware) and client-side (browser) contexts
  * 2. Each context needs a different base URL to reach the user service
  * 3. A singleton axios instance would "freeze" the URL from the first context that loads it
  * 4. Dynamic creation ensures getBaseURL() runs fresh for each request context
- * 
+ *
  * This fixes the Docker networking bug where middleware couldn't reach the user service.
  */
 const createApiClient = () => {
   return axios.create({
     baseURL: getBaseURL(), // Fresh URL calculation for current execution context
     headers: {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
     },
     timeout: 10000, // 10 seconds timeout
   });
@@ -79,10 +79,10 @@ const createApiClient = () => {
 // API Endpoints
 const API_ENDPOINTS = {
   // users
-  USER_SERVICE: '/users',
+  USER_SERVICE: "/users",
   // auth
-  AUTH_SERVICE: '/auth',
-}
+  AUTH_SERVICE: "/auth",
+};
 
 /**
  * @param token JWT token string
@@ -91,17 +91,20 @@ const API_ENDPOINTS = {
 const verifyToken = async (token: string) => {
   try {
     const apiClient = createApiClient();
-    const response = await apiClient.get(`${API_ENDPOINTS.AUTH_SERVICE}/verify-token`, {
-      headers: {
-        'Authorization': `Bearer ${token}`
-      }
-    });
+    const response = await apiClient.get(
+      `${API_ENDPOINTS.AUTH_SERVICE}/verify-token`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
     return response;
   } catch (error) {
-    console.error('Error verifying token:', error);
+    console.error("Error verifying token:", error);
     throw error;
   }
-}
+};
 
 /**
  * Logs in a user with email and password
@@ -112,16 +115,19 @@ const verifyToken = async (token: string) => {
 const login = async (email: string, password: string) => {
   try {
     const apiClient = createApiClient();
-    const response = await apiClient.post(`${API_ENDPOINTS.AUTH_SERVICE}/login`, {
-      email,
-      password
-    });
+    const response = await apiClient.post(
+      `${API_ENDPOINTS.AUTH_SERVICE}/login`,
+      {
+        email,
+        password,
+      },
+    );
     return response;
   } catch (error) {
-    console.error('Error logging in:', error);
+    console.error("Error logging in:", error);
     throw error;
   }
-}
+};
 
 /**
  * Signs up a new user
@@ -136,15 +142,14 @@ const signup = async (username: string, email: string, password: string) => {
     const response = await apiClient.post(`${API_ENDPOINTS.USER_SERVICE}/`, {
       username,
       email,
-      password
+      password,
     });
     return response;
   } catch (error) {
-    console.error('Error signing up:', error);
+    console.error("Error signing up:", error);
     throw error;
   }
-}
+};
 
 // Export configuration
 export { verifyToken, login, signup };
-
