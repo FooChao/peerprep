@@ -67,12 +67,11 @@ export default function LoginForm() {
         response.data
       );
 
-      // Redirect after short delay
+      // Use router.replace instead of push for better Docker/Nginx compatibility
       setTimeout(() => {
-        // clear the toast
         toast.dismiss();
-        router.push("/home");
-      }, 500);
+        router.replace("/home");
+      }, 1000);
 
     } catch (error) {
       console.error('Login error details:', error);

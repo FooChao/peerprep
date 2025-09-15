@@ -281,4 +281,58 @@ Request to implement UserContext for managing user authentication state and crea
 
 ---
 
+## Entry 9
+
+# Date/Time:
+2025-09-16 16:00
+
+# Tool:
+GitHub Copilot (model: Claude Sonnet 4)
+
+# Prompt/Command:
+Configure Nginx reverse proxy for PeerPrep frontend and user service with proper routing, CORS handling, and Next.js client-side navigation support.
+
+# Output Summary:
+- Configured Nginx API gateway for frontend and user service routing
+- Fixed Docker networking issues for login redirects
+- Enhanced API configuration for server-side vs client-side calls
+
+# Action Taken:
+- [x] Accepted as-is
+- [ ] Modified
+- [ ] Rejected
+
+# Author Notes:
+- Validated correctness, security, and performance of the configuration
+
+---
+
+## Entry 10
+
+# Date/Time:
+2025-09-16 16:30
+
+# Tool:
+GitHub Copilot (model: Claude Sonnet 4)
+
+# Prompt/Command:
+Fix Docker networking bug where middleware (server-side) and browser (client-side) need different API endpoints for same service.
+
+# Output Summary:
+- Added dynamic axios client creation to handle different execution contexts
+- Implemented separate URLs for server-side (http://user-service:4000) and client-side (http://localhost/api) calls
+- Fixed middleware token verification failing due to incorrect API endpoint routing
+- Added comprehensive documentation explaining the Docker networking solution
+
+# Action Taken:
+- [x] Accepted as-is
+- [ ] Modified
+- [ ] Rejected
+
+# Author Notes:
+- Validated dynamic client creation approach fixes Docker container-to-container communication issues
+- Confirmed solution maintains proper API gateway routing for browser requests
+
+---
+
 

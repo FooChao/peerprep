@@ -51,6 +51,8 @@ services:
     environment:
       - NODE_ENV=production # Set Node.js to production mode
   
+  ### NOTE: LOCAL DATABASE SERVICES YET TO BE TESTED BY ME DO NOT USE YET ###
+
   # MongoDB Database for User Services
   mongodb-user-services:
     image: mongo:7.0.12

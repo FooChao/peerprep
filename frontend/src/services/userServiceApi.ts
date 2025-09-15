@@ -1,3 +1,10 @@
+/**
+ * AI Assistance Disclosure:
+ * Tool: GitHub Copilot (model: Claude Sonnet 4), date: 2025-09-16
+ * Purpose: To fix Docker networking bug where middleware (server-side) and browser (client-side) need different API endpoints for same service.
+ * Author Review: I validated correctness, security, and performance of the dynamic client creation approach.
+ */
+
 // API Configuration for PeerPrep Frontend
 // Based on docker-compose.yml configuration with API Gateway
 import axios from 'axios';
@@ -16,19 +23,58 @@ export interface ApiResponse<T = unknown> {
   data?: T;
 }
 
-// Base URL - All API calls go through the API Gateway on port 80
-const BASE_URL = process.env.NODE_ENV === 'production' 
-  ? 'http://localhost/api'        // Through API Gateway (Docker)
-  : 'http://localhost:4000';  // Direct to user-service (Local dev)
+/**
+ * Dynamic Base URL Detection
+ * 
+ * This function determines the correct API endpoint based on execution context:
+ * - Server-side (middleware): Direct container-to-container communication
+ * - Client-side (browser): Through API Gateway proxy
+ * 
+ * This fixes a Docker networking bug where the same code runs in different environments
+ * and needs different URLs to reach the same service.
+ */
+const getBaseURL = () => {
+  // Check if we're running server-side (middleware) or client-side (browser)
+  const isServerSide = typeof window === 'undefined';
+  
+  if (process.env.NODE_ENV === 'production') {
+    if (isServerSide) {
+      // Server-side: Direct call to user-service container
+      // This bypasses the API gateway for internal Docker networking
+      return 'http://user-service:4000';
+    } else {
+      // Client-side: Through API Gateway
+      // Browser requests go through the nginx proxy on localhost
+      return 'http://localhost/api';
+    }
+  } else {
+    // Development: Direct to user-service (no Docker containers)
+    return 'http://localhost:4000';
+  }
+};
 
-// Create axios instance with base configuration
-const apiClient = axios.create({
-  baseURL: BASE_URL,
-  headers: {
-    'Content-Type': 'application/json',
-  },
-  timeout: 10000, // 10 seconds timeout
-});
+/**
+ * Dynamic Axios Client Creation
+ * 
+ * We create a new axios instance for each request instead of using a module-level singleton.
+ * This is necessary because:
+ * 
+ * 1. The same module code runs in both server-side (middleware) and client-side (browser) contexts
+ * 2. Each context needs a different base URL to reach the user service
+ * 3. A singleton axios instance would "freeze" the URL from the first context that loads it
+ * 4. Dynamic creation ensures getBaseURL() runs fresh for each request context
+ * 
+ * This fixes the Docker networking bug where middleware couldn't reach the user service.
+ */
+const createApiClient = () => {
+  return axios.create({
+    baseURL: getBaseURL(), // Fresh URL calculation for current execution context
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    timeout: 10000, // 10 seconds timeout
+  });
+};
 
 // API Endpoints
 const API_ENDPOINTS = {
@@ -44,6 +90,7 @@ const API_ENDPOINTS = {
  */
 const verifyToken = async (token: string) => {
   try {
+    const apiClient = createApiClient();
     const response = await apiClient.get(`${API_ENDPOINTS.AUTH_SERVICE}/verify-token`, {
       headers: {
         'Authorization': `Bearer ${token}`
@@ -64,6 +111,7 @@ const verifyToken = async (token: string) => {
  */
 const login = async (email: string, password: string) => {
   try {
+    const apiClient = createApiClient();
     const response = await apiClient.post(`${API_ENDPOINTS.AUTH_SERVICE}/login`, {
       email,
       password
@@ -84,6 +132,7 @@ const login = async (email: string, password: string) => {
  */
 const signup = async (username: string, email: string, password: string) => {
   try {
+    const apiClient = createApiClient();
     const response = await apiClient.post(`${API_ENDPOINTS.USER_SERVICE}/`, {
       username,
       email,
