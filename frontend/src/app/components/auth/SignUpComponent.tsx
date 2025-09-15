@@ -20,8 +20,10 @@ import { toast } from "sonner";
 import { signup } from "@/services/userServiceApi";
 import { handleApiError, handleApiSuccess } from "@/services/errorHandler";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function SignupForm() {
+  const router = useRouter();
 
   //#region states
   // main state
@@ -97,11 +99,6 @@ export default function SignupForm() {
   //#endregion
 
   //#region other methods
-  const NavigateToLogin = (e: React.MouseEvent) => {
-    e.preventDefault();
-    window.location.href = "/auth/login";
-  };
-
   const onRegister = async (e: React.MouseEvent) => {
     e.preventDefault();
     // Specific validation checks with toast messages
@@ -161,7 +158,7 @@ export default function SignupForm() {
 
       //Redirect to login after short delay (commented out for testing)
       setTimeout(() => {
-        window.location.href = "/auth/login";
+        router.push("/auth/login");
       }, 1500);
 
     } catch (error: unknown) {
