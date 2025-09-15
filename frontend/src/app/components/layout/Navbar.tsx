@@ -11,9 +11,18 @@
 import Link from "next/link";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { User, LogOut } from "lucide-react";
+import { User, LogOut, ChevronDown } from "lucide-react";
 import { removeToken } from "@/services/userServiceCookies";
 import { useUser } from "@/contexts/UserContext";
+import Image from "next/image";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 export default function Navbar() {
   const [activeTab, setActiveTab] = useState("Dashboard");
@@ -35,9 +44,16 @@ export default function Navbar() {
       <div className="flex justify-between items-center">
         {/* Logo */}
         <div className="flex items-center">
-          <div className="text-blue-600 font-bold text-xl">
-            <span className="text-2xl">👥</span> PeerPrep
-          </div>
+          <Link href="/home" className="flex items-center space-x-2">
+            <Image
+              src="/PeerPrepLogo.png"
+              alt="PeerPrep Logo"
+              width={40}
+              height={40}
+              className="object-contain"
+            />
+            <span className="text-blue-600 font-bold text-xl">PeerPrep</span>
+          </Link>
         </div>
 
         {/* Navigation Items */}
@@ -58,22 +74,35 @@ export default function Navbar() {
           ))}
         </div>
 
-        {/* User Profile & Logout */}
-        <div className="flex items-center space-x-3">
-          <div className="flex items-center space-x-2">
-            <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
-              <User className="w-4 h-4 text-blue-600" />
-            </div>
-            {user && (
-              <span className="text-sm font-medium text-gray-700">
-                {user.username}
-              </span>
-            )}
-          </div>
-          <Button variant="outline" size="sm" onClick={handleLogout}>
-            <LogOut className="w-4 h-4 mr-2" />
-            Logout
-          </Button>
+        {/* User Profile Dropdown */}
+        <div className="flex items-center">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" className="flex items-center space-x-2 hover:bg-gray-100">
+                <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+                  <User className="w-4 h-4 text-blue-600" />
+                </div>
+                <ChevronDown className="w-4 h-4 text-gray-600" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-56">
+              <DropdownMenuLabel className="font-normal">
+                <div className="flex flex-col space-y-1">
+                  <p className="text-sm font-medium leading-none">
+                    {user?.username || "Guest"}
+                  </p>
+                  <p className="text-xs leading-none text-muted-foreground">
+                    {user?.email || ""}
+                  </p>
+                </div>
+              </DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={handleLogout} className="text-red-600 cursor-pointer">
+                <LogOut className="w-4 h-4 mr-2" />
+                Logout
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </div>
     </nav>
