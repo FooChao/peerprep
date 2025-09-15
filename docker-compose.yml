@@ -4,7 +4,10 @@ services:
   # API Gateway - Routes all external traffic
   api-gateway:
     image: honeydews/api-gateway:latest
-    pull_policy: always
+    pull_policy: never
+    build:
+      context: ./api-gateway
+      dockerfile: Dockerfile
     ports:
       - "80:80"   # HTTP traffic
       - "443:443" # HTTPS traffic (if configured)
