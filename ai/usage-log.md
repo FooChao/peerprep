@@ -109,7 +109,7 @@ GitHub Copilot (model: Claude Sonnet 4)
 2025-09-15 18:45
 
 # Tool:
-GitHub Copilot (model: Claude 3.5 Sonnet)
+GitHub Copilot (model: Claude Sonnet 4)
 
 # Prompt/Command:
 Request to implement toast notifications for signup form validation with top-center positioning and custom styling, replacing disabled button with specific error feedback.
@@ -143,7 +143,7 @@ Request to implement toast notifications for signup form validation with top-cen
 2025-09-15 19:15
 
 # Tool:
-GitHub Copilot (model: Claude 3.5 Sonnet)
+GitHub Copilot (model: Claude Sonnet 4)
 
 # Prompt/Command:
 Request to implement comprehensive signup form improvements including controlled inputs, debounced password validation, password complexity requirements with visual indicators, and enhanced UX patterns.
@@ -180,7 +180,7 @@ Request to implement comprehensive signup form improvements including controlled
 2025-09-15 20:30
 
 # Tool:
-GitHub Copilot (model: Claude 3.5 Sonnet)
+GitHub Copilot (model: Claude Sonnet 4)
 
 # Prompt/Command:
 Request to create reusable error handling utilities for consistent API error management and user feedback across the application.
@@ -218,7 +218,7 @@ Request to create reusable error handling utilities for consistent API error man
 2025-09-15 21:15
 
 # Tool:
-GitHub Copilot (model: Claude 3.5 Sonnet)
+GitHub Copilot (model: Claude Sonnet 4)
 
 # Prompt/Command:
 Request to implement simple cookie utilities for JWT token storage and removal, ensuring compatibility with Next.js middleware authentication.
@@ -247,7 +247,7 @@ Request to implement simple cookie utilities for JWT token storage and removal, 
 2025-09-15 22:30
 
 # Tool:
-GitHub Copilot (model: Claude 3.5 Sonnet)
+GitHub Copilot (model: Claude Sonnet 4)
 
 # Prompt/Command:
 Request to implement controlled state management and password visibility toggle in login component, maintaining consistency with signup component patterns.
