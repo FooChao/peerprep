@@ -209,3 +209,32 @@ Request to create reusable error handling utilities for consistent API error man
 - Security implications minimal: client-side error handling only
 - UX improvements: consistent error messaging and user feedback across application
 - Maintainability: centralized error handling logic for easy updates
+
+---
+
+## Entry 7
+
+# Date/Time:
+2025-09-15 21:15
+
+# Tool:
+GitHub Copilot (model: Claude 3.5 Sonnet)
+
+# Prompt/Command:
+Request to implement simple cookie utilities for JWT token storage and removal, ensuring compatibility with Next.js middleware authentication.
+
+# Output Summary:
+- Created minimal cookie management utilities (/services/userServiceCookies.ts)
+- Implemented addToken function for setting JWT token in browser cookies
+- Implemented removeToken function for clearing authentication cookies on logout
+
+
+# Action Taken:
+- [x] Accepted as-is
+- [ ] Modified
+- [ ] Rejected
+
+# Author Notes:
+- Validated cookie naming convention matches middleware token reading logic
+- Confirmed simplicity over complexity for basic token storage requirements
+- Maintainability: simple two-function API for easy integration across application
