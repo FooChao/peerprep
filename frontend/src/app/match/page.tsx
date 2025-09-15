@@ -3,7 +3,6 @@ import DifficultyComponent from "../components/match/DifficultyComponent";
 import SearchComponent from "../components/match/SearchComponent";
 
 export default function MatchPage() {
-
   return (
     <div className="h-screen flex flex-col items-center justify-center">
       <div className="text-center">
