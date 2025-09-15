@@ -21,8 +21,8 @@ Request to implement a reusable debounced input component in React with TypeScri
 - Support for controlled/uncontrolled input patterns
 
 # Action Taken:
-- [x] Modified
-- [ ] Accepted as-is  
+- [ ] Modified
+- [x] Accepted as-is  
 - [ ] Rejected
 
 # Author Notes:
