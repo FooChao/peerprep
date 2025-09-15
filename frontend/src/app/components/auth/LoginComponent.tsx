@@ -51,17 +51,13 @@ export default function LoginForm() {
       // Store token
       addToken(token);
 
-      // Parse token to get user data and set in context
-      try {
-        const payload = JSON.parse(atob(token.split('.')[1]));
-        if (payload.username && payload.email) {
-          setUser({
-            username: payload.username,
-            email: payload.email,
-          });
-        }
-      } catch (error) {
-        console.error("Error parsing token:", error);
+      // Set user data from the API response
+      const userData = response?.data?.data;
+      if (userData?.username && userData?.email) {
+        setUser({
+          username: userData.username,
+          email: userData.email,
+        });
       }
 
       // Show success message
