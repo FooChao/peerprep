@@ -1,4 +1,5 @@
 # PeerPrep Docker Compose Configuration
+# TODO: when deploying to production, switch to using images from Docker Hub -> using 'image' and 'pull_policy' and remove 'build' sections
 services:
   # Frontend Next.js Application
   # Scalable service with port range mapping
@@ -6,13 +7,26 @@ services:
   # which is important for peerprep where we do matching
   frontend:
     image: honeydews/frontend
-    pull_policy: always
+    pull_policy: never
     build:
       context: ./frontend
       dockerfile: Dockerfile
       target: runner # Production build target
     ports:
       - "3000-3001:3000" # Port range for scaling (use --scale frontend=N)
+
+  user-service:
+    image: foochao/user-service
+    pull_policy: never
+    build:
+      context: ./user-service
+      dockerfile: Dockerfile
+      # Use the runner stage from the multi-stage Dockerfile (not production)
+      target: runner
+    ports:
+      - "4000:4000" # Expose user-service on port 3001 (matches your app)
+    env_file:
+      - ./user-service/.env # Environment variables for user-service
   
   # MongoDB Database for User Services
   mongodb-user-services:
