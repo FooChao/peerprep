@@ -5,7 +5,7 @@
  *  debounced password validation, password complexity requirements with visual indicators,
  *  and enhanced UX patterns.
  * Author Review: I validated correctness, security, and performance of the code.
- * 
+ *
  * Tool: ChatGPT (model: GPT-4.1, date: 2025-09-16)
  * Purpose: To Generate email regex validation
  * Author Review: I validated correctness, security, and performance of the code.
