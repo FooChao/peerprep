@@ -5,6 +5,10 @@
  *  debounced password validation, password complexity requirements with visual indicators,
  *  and enhanced UX patterns.
  * Author Review: I validated correctness, security, and performance of the code.
+ * 
+ * Tool: ChatGPT (model: GPT-4.1, date: 2025-09-16)
+ * Purpose: To Generate email regex validation
+ * Author Review: I validated correctness, security, and performance of the code.
  */
 
 "use client";
@@ -101,17 +105,29 @@ export default function SignupForm() {
   //#region other methods
   const onRegister = async (e: React.MouseEvent) => {
     e.preventDefault();
+
+    const trimmedUsername = username.trim();
+    const trimmedEmail = email.trim();
     // Specific validation checks with toast messages
-    if (!username) {
+    if (!trimmedUsername) {
       toast.error("Username is required!", {
         description: "Please enter a username to continue.",
       });
       return;
     }
 
-    if (!email) {
+    if (!trimmedEmail) {
       toast.error("Email is required!", {
         description: "Please enter your email address.",
+      });
+      return;
+    }
+
+    // check if email format is valid using simple regex
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailPattern.test(trimmedEmail)) {
+      toast.error("Invalid email format!", {
+        description: "Please enter a valid email address.",
       });
       return;
     }
@@ -146,7 +162,7 @@ export default function SignupForm() {
 
     try {
       // sign up using apis - Axios automatically parses JSON
-      const response = await signup(username, email, password);
+      const response = await signup(trimmedUsername, trimmedEmail, password);
 
       // Use reusable success handler
       handleApiSuccess(
@@ -155,7 +171,7 @@ export default function SignupForm() {
         response.data.data,
       );
 
-      //Redirect to login after short delay (commented out for testing)
+      //Redirect to login after short delay
       setTimeout(() => {
         router.push("/auth/login");
       }, 1500);
