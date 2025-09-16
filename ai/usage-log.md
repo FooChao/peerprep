@@ -361,4 +361,37 @@ Request to generate email regex validation.
 
 ---
 
+## Entry 12
+
+# Date/Time:
+2025-09-16 21:00
+
+# Tool:
+GitHub Copilot (model: Claude Sonnet 4)
+
+# Prompt/Command:
+Request to create a simple client-side auth guard that prevents browser back navigation to cached protected pages after logout.
+
+# Output Summary:
+- Created AuthGuard component (/app/components/layout/AuthGuard.tsx) for layout-level protection
+- Implemented pathname-based token checking using Next.js usePathname hook
+- Added immediate redirect to login when no token found on protected routes
+- Integrated AuthGuard into root layout.tsx for automatic protection on all pages
+- Enhanced middleware with cookie clearing on redirects for complete logout state
+- Combined server-side cache control headers with client-side token verification
+
+# Action Taken:
+- [ ] Accepted as-is
+- [x] Modified
+- [ ] Rejected
+
+# Author Notes:
+- Validated AuthGuard catches browser back navigation edge case after logout
+- Confirmed minimal performance impact with simple token existence check
+- Security implications: client-side protection complements server-side middleware
+- UX improvements: immediate redirect prevents brief flash of protected content
+- Maintainability: simple, reusable component for future auth requirements
+
+---
+
 

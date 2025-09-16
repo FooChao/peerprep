@@ -127,7 +127,7 @@ export default function LoginForm() {
               </div>
             </div>
 
-            <div className="flex justify-center ">
+            <div className="flex justify-center mt-5">
               <Button onClick={handleLogin} className="w-full">
                 Login
               </Button>

@@ -1,12 +1,3 @@
-import { IoIosSettings } from "react-icons/io";
-import { CiBookmark } from "react-icons/ci";
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardContent,
-} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import TopicsComponent from "../components/match/TopicsComponent";
 import DifficultyComponent from "../components/match/DifficultyComponent";

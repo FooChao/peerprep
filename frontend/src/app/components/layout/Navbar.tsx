@@ -10,6 +10,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { User, LogOut, ChevronDown } from "lucide-react";
 import { removeToken } from "@/services/userServiceCookies";
@@ -27,6 +28,7 @@ import {
 export default function Navbar() {
   const [activeTab, setActiveTab] = useState("Dashboard");
   const { user, setUser } = useUser();
+  const router = useRouter();
 
   const navItems = [
     { name: "Dashboard", href: "/home" },
@@ -34,9 +36,20 @@ export default function Navbar() {
   ];
 
   const handleLogout = () => {
-    removeToken();
+    // Clear user context first
     setUser(null);
-    window.location.href = "/auth/login";
+    
+    // Clear token from cookies
+    removeToken();
+    
+    // Clear all localStorage and sessionStorage
+    if (typeof window !== 'undefined') {
+      localStorage.clear();
+      sessionStorage.clear();
+    }
+    
+  // Use Next.js router.push for client-side navigation
+  router.push("/auth/login");
   };
 
   return (
