@@ -30,13 +30,13 @@ export async function middleware(request: NextRequest) {
   if (!token) {
     const loginUrl = new URL("/auth/login", request.url);
     const response = NextResponse.redirect(loginUrl);
-    
+
     // Clear any existing token cookie to ensure clean state
     response.cookies.set("token", "", {
       path: "/",
       expires: new Date(0),
     });
-    
+
     return response;
   }
 
@@ -48,37 +48,40 @@ export async function middleware(request: NextRequest) {
       // Token is invalid, redirect to login
       const loginUrl = new URL("/auth/login", request.url);
       const redirectResponse = NextResponse.redirect(loginUrl);
-      
+
       // Clear invalid token cookie
       redirectResponse.cookies.set("token", "", {
         path: "/",
         expires: new Date(0),
       });
-      
+
       return redirectResponse;
     }
 
     // Token is valid, allow access but add cache control headers
     const response_next = NextResponse.next();
-    
+
     // Prevent browser caching of protected pages to avoid back navigation issues
-    response_next.headers.set('Cache-Control', 'no-cache, no-store, must-revalidate');
-    response_next.headers.set('Pragma', 'no-cache');
-    response_next.headers.set('Expires', '0');
-    
+    response_next.headers.set(
+      "Cache-Control",
+      "no-cache, no-store, must-revalidate",
+    );
+    response_next.headers.set("Pragma", "no-cache");
+    response_next.headers.set("Expires", "0");
+
     return response_next;
   } catch (error) {
     console.error("Token verification failed:", error);
     // On error, redirect to login
     const loginUrl = new URL("/auth/login", request.url);
     const redirectResponse = NextResponse.redirect(loginUrl);
-    
+
     // Clear potentially corrupted token cookie
     redirectResponse.cookies.set("token", "", {
       path: "/",
       expires: new Date(0),
     });
-    
+
     return redirectResponse;
   }
 }

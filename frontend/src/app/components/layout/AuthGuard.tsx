@@ -3,7 +3,7 @@
  * Tool: GitHub Copilot (model: Claude Sonnet 4), date: 2025-09-16
  * Purpose: To create a simple client-side auth guard that prevents browser back navigation to cached protected pages after logout.
  * Author Review: I validated correctness, security, and performance of the code.
- * 
+ *
  */
 
 /**
@@ -45,7 +45,9 @@ export default function AuthGuard() {
       if (!pathname.startsWith("/auth")) {
         const token = getToken();
         if (!token) {
-          console.log("AuthGuard: No token found on popstate (back/forward), redirecting to login");
+          console.log(
+            "AuthGuard: No token found on popstate (back/forward), redirecting to login",
+          );
           router.push("/auth/login");
         }
       }
@@ -61,14 +63,17 @@ export default function AuthGuard() {
       if (!document.hidden && !pathname.startsWith("/auth")) {
         const token = getToken();
         if (!token) {
-          console.log("AuthGuard: No token found on visibility change, redirecting to login");
+          console.log(
+            "AuthGuard: No token found on visibility change, redirecting to login",
+          );
           router.push("/auth/login");
         }
       }
     };
 
     document.addEventListener("visibilitychange", handleVisibilityChange);
-    return () => document.removeEventListener("visibilitychange", handleVisibilityChange);
+    return () =>
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
   }, [pathname, router]);
 
   // Add focus listener for additional protection
@@ -77,7 +82,9 @@ export default function AuthGuard() {
       if (!pathname.startsWith("/auth")) {
         const token = getToken();
         if (!token) {
-          console.log("AuthGuard: No token found on focus, redirecting to login");
+          console.log(
+            "AuthGuard: No token found on focus, redirecting to login",
+          );
           router.push("/auth/login");
         }
       }

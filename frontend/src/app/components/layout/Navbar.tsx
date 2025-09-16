@@ -38,18 +38,18 @@ export default function Navbar() {
   const handleLogout = () => {
     // Clear user context first
     setUser(null);
-    
+
     // Clear token from cookies
     removeToken();
-    
+
     // Clear all localStorage and sessionStorage
-    if (typeof window !== 'undefined') {
+    if (typeof window !== "undefined") {
       localStorage.clear();
       sessionStorage.clear();
     }
-    
-  // Use Next.js router.push for client-side navigation
-  router.push("/auth/login");
+
+    // Use Next.js router.push for client-side navigation
+    router.push("/auth/login");
   };
 
   return (
