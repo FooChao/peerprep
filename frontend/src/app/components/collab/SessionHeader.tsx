@@ -20,7 +20,9 @@ export default function SessionHeader() {
       <Button>
         <Mic />
       </Button>
-      <Button className="bg-red-500 text-black mr-3 hover:bg-red-300">Leave Session</Button>
+      <Button className="bg-red-500 text-black mr-3 hover:bg-red-300">
+        Leave Session
+      </Button>
     </header>
   );
 }
