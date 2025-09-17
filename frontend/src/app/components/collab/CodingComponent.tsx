@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, CircleUser } from "lucide-react";
 
 export default function CodingComponent() {
   const [codeContent, setCodeContent] = useState<string>("");
@@ -24,7 +24,7 @@ export default function CodingComponent() {
 
   return (
     <div className="h-full mt-5">
-      <div className="mb-4">
+      <div className="flex justify-between mb-4">
         <DropdownMenu>
           <DropdownMenuTrigger asChild className="flex justify-between">
             <Button className="w-40 bg-white text-black hover:bg-gray-500">
@@ -53,6 +53,10 @@ export default function CodingComponent() {
             </DropdownMenuGroup>
           </DropdownMenuContent>
         </DropdownMenu>
+        <div className="flex justify-center items-center">
+            <div className="text-white mr-3">derrickwong8909@gmail.com</div>
+            <CircleUser className="text-white mr-2" size="25"/>
+        </div>
       </div>
       <Editor
         height="85vh"
