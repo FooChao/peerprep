@@ -6,7 +6,7 @@ export default function ChatComponent() {
   const chatMessages = ["HELLO", "HOW ARE YOU?"];
 
   return (
-    <div className="flex flex-col h-full bg-stone-900 p-10">
+    <div className="flex flex-col h-full bg-stone-900 p-1">
       <div className="flex bg-stone-500 h-full mb-5 rounded-lg"></div>
 
       <div className="flex w-full mt-auto gap-2">
