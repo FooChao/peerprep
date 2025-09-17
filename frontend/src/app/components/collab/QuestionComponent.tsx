@@ -1,3 +1,19 @@
 export default function QuestionComponent() {
-  return <div>Helo</div>;
+  return (
+  <div>
+
+    {/* Question Description */}
+    <div>
+
+    </div>
+
+    {/* Examples Section */}
+    <div className="bg-stone-900">
+
+    </div>
+
+    {/* Constraints Section */}
+
+  </div>
+  );
 }
