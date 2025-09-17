@@ -6,21 +6,15 @@ import {
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuPortal,
-  DropdownMenuSeparator,
-  DropdownMenuShortcut,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { ChevronDown } from "lucide-react";
 
 export default function CodingComponent() {
   const [codeContent, setCodeContent] = useState<string>("");
-  const [selectedLanguage, setSeletedLanguage] = useState<string>("Javascript");
+  const [selectedLanguage, setSeletedLanguage] = useState<string>("JavaScript");
 
   function setInitialContent(value: string | undefined) {
     if (value != undefined) {
@@ -29,21 +23,33 @@ export default function CodingComponent() {
   }
 
   return (
-    <div className="h-full w-[50%] mt-10">
+    <div className="h-full  mt-10">
       <div className="mb-4">
         <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button className="w-40 bg-white text-black">
-              {selectedLanguage}{" "}
+          <DropdownMenuTrigger asChild className="flex justify-between">
+            <Button className="w-40 bg-white text-black hover:bg-gray-500">
+              {selectedLanguage} <ChevronDown />
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent className="w-10" align="center">
+          <DropdownMenuContent className="w-10" align="start">
             <DropdownMenuGroup>
-              <DropdownMenuItem>Javascript</DropdownMenuItem>
-              <DropdownMenuItem>Python</DropdownMenuItem>
-              <DropdownMenuItem>C</DropdownMenuItem>
-              <DropdownMenuItem>C++</DropdownMenuItem>
-              <DropdownMenuItem>Java</DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => setSeletedLanguage("JavaScript")}
+              >
+                Javascript
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setSeletedLanguage("Python")}>
+                Python
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setSeletedLanguage("C")}>
+                C
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setSeletedLanguage("C++")}>
+                C++
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setSeletedLanguage("Java")}>
+                Java
+              </DropdownMenuItem>
             </DropdownMenuGroup>
           </DropdownMenuContent>
         </DropdownMenu>
@@ -51,8 +57,7 @@ export default function CodingComponent() {
       <Editor
         height="85vh"
         theme="vs-dark"
-        defaultLanguage="python"
-        defaultValue="Enter your code here..."
+        defaultLanguage={selectedLanguage.toLowerCase()}
         onChange={(value) => setInitialContent(value)}
       ></Editor>
     </div>

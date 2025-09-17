@@ -9,9 +9,19 @@ export default function CollabPage() {
       <SessionHeader />
 
       <div className="flex flex-1 w-full bg-stone-800 ">
-        <QuestionComponent />
-        <CodingComponent />
-        <ChatComponent />
+        
+        <div className="flex-1">
+          <QuestionComponent/>
+        </div>
+        
+        <div className="flex-[2] h-full">
+          <CodingComponent/>
+        </div>
+
+        <div className="flex-1 p-5">
+          <ChatComponent/>
+        </div>
+
       </div>
     </main>
   );
