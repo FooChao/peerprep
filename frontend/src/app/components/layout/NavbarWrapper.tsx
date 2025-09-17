@@ -15,8 +15,9 @@ export default function NavbarWrapper() {
 
   // Don't show navbar on auth pages
   const isAuthPage = pathname.startsWith("/auth");
+  const isCollabPage = pathname.startsWith("/collab");
 
-  if (isAuthPage) {
+  if (isAuthPage || isCollabPage) {
     return null;
   }
 
