@@ -5,7 +5,7 @@ import SessionHeader from "../components/collab/SessionHeader";
 
 export default function CollabPage() {
   return (
-    <main className="bg-stone-900 min-h-screen flex flex-col items-center">
+    <main className="bg-stone-900 h-screen flex flex-col items-center">
       <SessionHeader />
 
       <div className="flex flex-1 w-full bg-stone-800 ">
