@@ -23,7 +23,7 @@ export default function CodingComponent() {
   }
 
   return (
-    <div className="mt-5">
+    <div className="h-full mt-5">
       <div className="mb-4">
         <DropdownMenu>
           <DropdownMenuTrigger asChild className="flex justify-between">

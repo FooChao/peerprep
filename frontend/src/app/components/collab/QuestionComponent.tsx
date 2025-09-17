@@ -1,14 +1,14 @@
 export default function QuestionComponent() {
   return (
-  <div>
+  <div className="h-full flex flex-col">
 
     {/* Question Description */}
-    <div>
+    <div className="flex-1">
 
     </div>
 
     {/* Examples Section */}
-    <div className="bg-stone-900">
+    <div className="flex-1 bg-stone-900">
 
     </div>
 
