@@ -2,10 +2,15 @@
 
 import { Card, CardTitle, CardHeader, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { useUser } from "@/contexts/UserContext";
+import { useRouter } from "next/navigation";
 
 export default function WelcomePage() {
-  function directToHome() {
-    window.location.href = "/match";
+  const { user } = useUser();
+  const router = useRouter();
+
+  function directToMatch() {
+    router.push("/match");
   }
 
   return (
@@ -13,7 +18,7 @@ export default function WelcomePage() {
       <CardHeader>
         <CardTitle className="text-4xl flex">
           Hello
-          <p className="ml-2 font-bold">Derrick Wong</p>
+          <p className="ml-2 font-bold">{user?.username || "Guest"}</p>
         </CardTitle>
         <CardTitle className="text-4xl flex">Ready to start coding?</CardTitle>
       </CardHeader>
@@ -21,7 +26,7 @@ export default function WelcomePage() {
       <CardContent>
         <Button
           className="w-30 bg-white border-black text-black border-2 border-black"
-          onClick={() => directToHome()}
+          onClick={() => directToMatch()}
         >
           Start
         </Button>

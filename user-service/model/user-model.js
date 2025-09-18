@@ -23,9 +23,12 @@ const UserModelSchema = new Schema({
   },
   isAdmin: {
     type: Boolean,
-    required: true,
     default: false,
   },
+  verified: {
+    type: Boolean,
+    default: false,
+  }
 });
 
 export default mongoose.model("UserModel", UserModelSchema);
