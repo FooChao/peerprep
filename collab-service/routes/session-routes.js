@@ -3,9 +3,9 @@ import { createSession } from "../controllers/session-controller.js";
 
 const sessionRouter = express.Router();
 
-sessionRouter.post("/", createSession);
+sessionRouter.post("", createSession);
 
-sessionRouter.get("/", (req, res) => {
+sessionRouter.get("", (req, res) => {
   res.status(200).json({ message: "test123" });
 });
 
