@@ -9,7 +9,7 @@ services:
       context: ./api-gateway
       dockerfile: Dockerfile
     ports:
-      - "80:80"   # HTTP traffic
+      - "80:80" # HTTP traffic
       - "443:443" # HTTPS traffic (if configured)
     depends_on:
       - frontend
@@ -50,7 +50,16 @@ services:
       - ./user-service/.env # Environment variables for user-service
     environment:
       - NODE_ENV=production # Set Node.js to production mode
-  
+
+  collab-service:
+    image: cjz/collab-service
+    pull_policy: never
+    build:
+      context: ./collab-service
+      dockerfile: Dockerfile
+    env_file:
+      - ./collab-service/.env
+
   ### NOTE: LOCAL DATABASE SERVICES YET TO BE TESTED BY ME DO NOT USE YET ###
 
   # MongoDB Database for User Services
