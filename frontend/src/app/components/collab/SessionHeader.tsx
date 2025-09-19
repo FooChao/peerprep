@@ -1,9 +1,15 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { Mic } from "lucide-react";
-import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 export default function SessionHeader() {
+  const router = useRouter();
+
+  function directToMatch() {
+    router.replace("/match");
+  }
+
   return (
     <header
       className="flex 
@@ -20,7 +26,10 @@ export default function SessionHeader() {
       <Button>
         <Mic />
       </Button>
-      <Button className="bg-red-500 text-black mr-3 hover:bg-red-300">
+      <Button
+        onClick={() => directToMatch()}
+        className="bg-red-500 text-black mr-3 hover:bg-red-300"
+      >
         Leave Session
       </Button>
     </header>
