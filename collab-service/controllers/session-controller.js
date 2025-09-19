@@ -1,12 +1,19 @@
 import { SessionModel } from "../models/session-model.js";
+import { dbClient } from "../db/connection.js";
 import * as z from "zod";
-export function createSession(req, res) {
+export async function createSession(req, res) {
   try {
     SessionModel.parse(req.body);
     const { sessionId, user1Id, user2Id, questionDifficulty, questionTopic } =
       req.body;
     //check if sessionId already exists in redis, if exist return session info
     console.log("Getting question from question service..");
+    await dbClient.set(sessionId, "value in redis");
+
+    const value = await dbClient.get(sessionId);
+    console.log(value);
+    //ADD SESSION TO REDIS TEST
+
     //temp mock question
     const question = {
       title: "2 sum",
@@ -18,6 +25,7 @@ export function createSession(req, res) {
       message: `Created new session ${sessionId} successfully`,
       question,
       sessionId,
+      value,
     });
   } catch (err) {
     if (err instanceof z.ZodError) {
