@@ -61,8 +61,9 @@ export default function CodingComponent() {
       <Editor
         height="85vh"
         theme="vs-dark"
-        defaultLanguage={selectedLanguage.toLowerCase()}
+        language={selectedLanguage.toLowerCase()}
         onChange={(value) => setInitialContent(value)}
+        options={{ scrollBeyondLastLine: false }}
       ></Editor>
     </div>
   );
