@@ -13,11 +13,23 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
+import { useSearchParams } from "next/navigation";
 
 export default function CheckEmailPage() {
   const [isResending, setIsResending] = useState(false);
   const [cooldownSeconds, setCooldownSeconds] = useState(0);
   const [canResend, setCanResend] = useState(true);
+  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
+
+  // Extract query parameters on mount using useSearchParams
+  const searchParams = useSearchParams();
+  useEffect(() => {
+    const emailParam = searchParams.get("email") || "";
+    const usernameParam = searchParams.get("username") || "";
+    setEmail(emailParam);
+    setUsername(usernameParam);
+  }, [searchParams]);
 
   // Cooldown timer effect
   useEffect(() => {

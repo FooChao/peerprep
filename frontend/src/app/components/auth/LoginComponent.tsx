@@ -88,10 +88,13 @@ export default function LoginForm() {
         "error" in error?.response &&
         error?.response?.error === "UNVERIFIED_EMAIL" &&
         "canResend" in error?.response &&
-        error?.response?.canResend
+        error?.response?.canResend &&
+        "username" in error?.response &&
+        typeof error?.response?.username === "string" &&
+        error?.response?.username
       ) {
         router.push(
-          `/auth/unverified?email=${encodeURIComponent(email)}`,
+          `/auth/unverified?email=${encodeURIComponent(email)}?username=${encodeURIComponent(error?.response?.username)}`,
         );
         return;
       }

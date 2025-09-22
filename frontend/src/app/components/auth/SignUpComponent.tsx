@@ -173,7 +173,9 @@ export default function SignupForm() {
 
       //Redirect to login after short delay
       setTimeout(() => {
-        router.push("/auth/login");
+        router.push(
+          `/auth/check-email?email=${encodeURIComponent(trimmedEmail)}&username=${encodeURIComponent(trimmedUsername)}`
+        );
       }, 1500);
     } catch (error: unknown) {
       // Use reusable error handler
