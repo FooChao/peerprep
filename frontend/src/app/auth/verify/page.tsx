@@ -25,27 +25,29 @@ export default function VerifyPage() {
 
       if (!token) {
         toast.error("Invalid verification link", {
-          description: "No verification token found."
+          description: "No verification token found.",
         });
-        router.push(`/auth/error?email=${encodeURIComponent(email)}&username=${encodeURIComponent(username)}`);
+        router.push(
+          `/auth/error?email=${encodeURIComponent(email)}&username=${encodeURIComponent(username)}`,
+        );
         return;
       }
 
       try {
         // TODO: Implement actual email verification API call
         // const response = await verifyEmailToken(token);
-        
+
         // Simulate API call for now
-        await new Promise(resolve => setTimeout(resolve, 2000));
-        
+        await new Promise((resolve) => setTimeout(resolve, 2000));
+
         // Simulate random success/failure for demo
         const isSuccess = Math.random() > 0.5; // 70% success rate for demo
-        
+
         if (isSuccess) {
           toast.success("Email verified successfully!", {
-            description: "You can now sign in to your account."
+            description: "You can now sign in to your account.",
           });
-          
+
           setTimeout(() => {
             router.push("/auth/login");
           }, 1500);
@@ -55,11 +57,13 @@ export default function VerifyPage() {
       } catch (error: unknown) {
         console.error("Email verification error:", error);
         toast.error("Verification failed", {
-          description: "The verification link is invalid or has expired."
+          description: "The verification link is invalid or has expired.",
         });
-        
+
         setTimeout(() => {
-          router.push(`/auth/error?email=${encodeURIComponent(email)}&username=${encodeURIComponent(username)}`);
+          router.push(
+            `/auth/error?email=${encodeURIComponent(email)}&username=${encodeURIComponent(username)}`,
+          );
         }, 1500);
       }
     };
@@ -75,7 +79,7 @@ export default function VerifyPage() {
         width={200}
         height={200}
       />
-      
+
       <Card className="min-h-[40%] min-w-[40%] mt-8">
         <CardHeader className="mt-5">
           <CardTitle className="text-center text-3xl font-bold">
@@ -86,11 +90,11 @@ export default function VerifyPage() {
         <CardContent className="px-15 pt-10 text-center">
           <div className="flex flex-col gap-6 items-center">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-            
+
             <p className="text-lg text-gray-600">
               Please wait while we verify your email address...
             </p>
-            
+
             <p className="text-sm text-gray-500">
               This may take a few moments.
             </p>

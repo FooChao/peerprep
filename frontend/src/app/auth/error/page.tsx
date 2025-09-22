@@ -34,7 +34,7 @@ export default function ErrorPage() {
         width={200}
         height={200}
       />
-      
+
       <Card className="min-h-[40%] min-w-[40%] mt-8">
         <CardHeader className="mt-5">
           <CardTitle className="text-center text-3xl font-bold text-red-600">
@@ -45,30 +45,34 @@ export default function ErrorPage() {
         <CardContent className="px-15 pt-10 text-center">
           <div className="flex flex-col gap-6">
             <p className="text-lg text-gray-600">
-              {email ? `The verification link for ${email} is invalid or has expired.` : 
-               "The verification link is invalid or has expired."}
+              {email
+                ? `The verification link for ${email} is invalid or has expired.`
+                : "The verification link is invalid or has expired."}
             </p>
-            
+
             {username && (
-              <p className="text-sm text-gray-500">
-                Username: {username}
-              </p>
+              <p className="text-sm text-gray-500">Username: {username}</p>
             )}
-            
+
             <p className="text-sm text-gray-500">
-              Please request a new verification email or contact support if the problem persists.
+              Please request a new verification email or contact support if the
+              problem persists.
             </p>
 
             <div className="flex flex-col gap-4">
-              <Link 
-                href={email ? `/auth/check-email?email=${encodeURIComponent(email)}&username=${encodeURIComponent(username)}` : "/auth/signup"}
+              <Link
+                href={
+                  email
+                    ? `/auth/check-email?email=${encodeURIComponent(email)}&username=${encodeURIComponent(username)}`
+                    : "/auth/signup"
+                }
                 className="w-full bg-black text-white font-medium py-2 px-4 rounded-md transition-colors"
               >
                 {email ? "Resend Verification Email" : "Back to Sign Up"}
               </Link>
-              
-              <Link 
-                href="/auth/login" 
+
+              <Link
+                href="/auth/login"
                 className="text-blue-500 hover:underline text-sm"
               >
                 Back to Login

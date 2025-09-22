@@ -50,27 +50,27 @@ export default function CheckEmailPage() {
 
   const handleResendEmail = async () => {
     if (!canResend) return;
-    
+
     setIsResending(true);
     setCanResend(false);
-    
+
     try {
       // TODO: Implement resend email verification API call
       // await resendVerificationEmail();
-      
+
       // Simulate API call for now
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+
       toast.success("Verification email sent!", {
-        description: "Please check your email inbox and spam folder."
+        description: "Please check your email inbox and spam folder.",
       });
-      
+
       // Start 30-second cooldown
       setCooldownSeconds(30);
     } catch (error: unknown) {
       console.error("Resend email error:", error);
       toast.error("Failed to resend email", {
-        description: "Please try again later."
+        description: "Please try again later.",
       });
       setCanResend(true); // Allow retry on error
     } finally {
@@ -86,7 +86,7 @@ export default function CheckEmailPage() {
         width={200}
         height={200}
       />
-      
+
       <Card className="min-h-[40%] min-w-[40%] mt-8">
         <CardHeader className="mt-5">
           <CardTitle className="text-center text-3xl font-bold">
@@ -97,29 +97,30 @@ export default function CheckEmailPage() {
         <CardContent className="px-15 pt-10 text-center">
           <div className="flex flex-col gap-6">
             <p className="text-lg text-gray-600">
-              A verification link has been sent to your email. Please check your inbox to verify your account.
+              A verification link has been sent to your email. Please check your
+              inbox to verify your account.
             </p>
-            
+
             <p className="text-sm text-gray-500">
-              Didn&apos;t receive the email? Check your spam folder or request a new one.
+              Didn&apos;t receive the email? Check your spam folder or request a
+              new one.
             </p>
 
             <div className="flex flex-col gap-4">
-              <Button 
+              <Button
                 onClick={handleResendEmail}
                 disabled={isResending || !canResend}
                 className="w-full"
               >
-                {isResending 
-                  ? "Sending..." 
-                  : !canResend 
+                {isResending
+                  ? "Sending..."
+                  : !canResend
                     ? `Resend in ${cooldownSeconds}s`
-                    : "Resend Verification Email"
-                }
+                    : "Resend Verification Email"}
               </Button>
-              
-              <Link 
-                href="/auth/login" 
+
+              <Link
+                href="/auth/login"
                 className="text-blue-500 hover:underline text-sm"
               >
                 Back to Login
