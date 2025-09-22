@@ -74,6 +74,27 @@ export default function LoginForm() {
         router.replace("/home");
       }, 1000);
     } catch (error) {
+      // check if it is error 403 with error "UNVERIFIED_EMAIL" and canResend is true
+      // if can redirect to auth/unverified
+      if (
+        typeof error === "object" &&
+        error !== null &&
+        "response" in error &&
+        typeof error?.response === "object" &&
+        error?.response !== null &&
+        typeof error?.response === "object" &&
+        "status" in error?.response &&
+        error?.response?.status === 403 &&
+        "error" in error?.response &&
+        error?.response?.error === "UNVERIFIED_EMAIL" &&
+        "canResend" in error?.response &&
+        error?.response?.canResend
+      ) {
+        router.push(
+          `/auth/unverified?email=${encodeURIComponent(email)}`,
+        );
+        return;
+      }
       console.error("Login error details:", error);
       handleApiError(error, "Login failed");
     }
