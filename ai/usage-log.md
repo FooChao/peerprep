@@ -392,6 +392,30 @@ Request to create a simple client-side auth guard that prevents browser back nav
 - UX improvements: immediate redirect prevents brief flash of protected content
 - Maintainability: simple, reusable component for future auth requirements
 
+
+## Entry 13
+
+# Date/Time:
+2025-09-19 19:00
+
+# Tool:
+Gemini (Tried to google the answer online and Google's AI overview mentioned the recommendations)
+
+# Prompt/Command:
+Ask on how to disable scrollbar and to not create additional empty spaces when there is still sufficient space to enter code.
+
+# Output Summary:
+- Explain that Monaco Editor has a field called "scrollBeyondLastLine" that when disabled will cause the scrollbar to scroll only till the last line.
+
+# Action Taken:
+- [X] Accepted as-is
+- [ ] Modified
+- [ ] Rejected
+
+# Author Notes:
+- Add the field "scrollBeyondLastLine" and set it to false in the Monaco Editor configuration
+- Tested the UI and found that the scrollbar will not appear if there is sufficient space for code to be entered. If code entered has exceeded the maximum container height, the scrollbar will only allow the user to scroll till the last line.
+
 ---
 
 ## Entry 14
