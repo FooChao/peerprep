@@ -11,14 +11,36 @@ import { Button } from "@/components/ui/button";
 import { Card, CardTitle, CardHeader, CardContent } from "@/components/ui/card";
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { toast } from "sonner";
 
 export default function UnverifiedPage() {
   const [isResending, setIsResending] = useState(false);
+  const [cooldownSeconds, setCooldownSeconds] = useState(0);
+  const [canResend, setCanResend] = useState(true);
+
+  // Cooldown timer effect
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+    if (cooldownSeconds > 0) {
+      interval = setInterval(() => {
+        setCooldownSeconds((prev) => {
+          if (prev <= 1) {
+            setCanResend(true);
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    }
+    return () => clearInterval(interval);
+  }, [cooldownSeconds]);
 
   const handleResendEmail = async () => {
+    if (!canResend) return;
+    
     setIsResending(true);
+    setCanResend(false);
     
     try {
       // TODO: Implement resend email verification API call
@@ -30,11 +52,15 @@ export default function UnverifiedPage() {
       toast.success("Verification email sent!", {
         description: "Please check your email inbox and spam folder."
       });
+      
+      // Start 30-second cooldown
+      setCooldownSeconds(30);
     } catch (error: unknown) {
       console.error("Resend email error:", error);
       toast.error("Failed to resend email", {
         description: "Please try again later."
       });
+      setCanResend(true); // Allow retry on error
     } finally {
       setIsResending(false);
     }
@@ -69,10 +95,15 @@ export default function UnverifiedPage() {
             <div className="flex flex-col gap-4">
               <Button 
                 onClick={handleResendEmail}
-                disabled={isResending}
+                disabled={isResending || !canResend}
                 className="w-full"
               >
-                {isResending ? "Sending..." : "Resend Verification Email"}
+                {isResending 
+                  ? "Sending..." 
+                  : !canResend 
+                    ? `Resend in ${cooldownSeconds}s`
+                    : "Resend Verification Email"
+                }
               </Button>
               
               <Link 
