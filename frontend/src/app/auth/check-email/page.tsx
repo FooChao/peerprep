@@ -3,6 +3,10 @@
  * Tool: GitHub Copilot (model: Claude Sonnet 4), date: 2025-09-23
  * Purpose: To create an email verification check page shown after signup, with logo display and resend functionality, maintaining visual consistency with auth page layouts.
  * Author Review: I validated correctness, security, and performance of the code.
+ *
+ * Tool: GitHub Copilot (model: Claude Sonnet 4), date: 2025-09-24
+ * Purpose: To fix Next.js 15 production build issues by replacing useSearchParams with window.location URLSearchParams for client-side URL parameter parsing.
+ * Author Review: I validated the solution works in both development and production builds, maintaining the same functionality while avoiding Suspense boundary requirements.
  */
 
 "use client";
@@ -13,7 +17,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
-import { useSearchParams } from "next/navigation";
 import { resendEmailVerification } from "@/services/userServiceApi";
 
 export default function CheckEmailPage() {
@@ -23,14 +26,16 @@ export default function CheckEmailPage() {
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
 
-  // Extract query parameters on mount using useSearchParams
-  const searchParams = useSearchParams();
+  // Extract query parameters on mount using window.location (client-side only)
   useEffect(() => {
-    const emailParam = searchParams.get("email") || "";
-    const usernameParam = searchParams.get("username") || "";
-    setEmail(emailParam);
-    setUsername(usernameParam);
-  }, [searchParams]);
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      const emailParam = params.get("email") || "";
+      const usernameParam = params.get("username") || "";
+      setEmail(emailParam);
+      setUsername(usernameParam);
+    }
+  }, []);
 
   // Cooldown timer effect
   useEffect(() => {

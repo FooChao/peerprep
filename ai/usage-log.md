@@ -610,3 +610,35 @@ Create verification routes for /verification/verify and /verification/resend end
 
 ---
 
+## Entry 20
+
+# Date/Time:
+2025-09-24 03:14
+
+# Tool:
+GitHub Copilot (model: Claude Sonnet 4)
+
+# Prompt/Command:
+Fix Next.js 15 production build failures caused by useSearchParams() requiring Suspense boundaries in auth pages, and update AI disclosure headers for transparency.
+
+# Output Summary:
+- Fixed Next.js 15 build compatibility by replacing useSearchParams() with window.location-based URL parsing in all auth pages
+- Updated 4 auth page files (check-email, error, unverified, verify) to use URLSearchParams(window.location.search) instead of useSearchParams hook
+- Added/updated AI disclosure headers in all modified auth pages for transparency
+- Resolved static generation errors that prevented Docker builds from completing successfully
+- Maintained existing functionality while ensuring production build compatibility
+
+# Action Taken:
+- [x] Accepted as-is
+- [ ] Modified
+- [ ] Rejected
+
+# Author Notes:
+- Validated Docker build now completes successfully without Next.js static generation errors
+- Confirmed all auth page functionality remains intact with new URL parsing approach
+- Next.js 15 requires Suspense boundaries for useSearchParams in static generation, window.location approach bypasses this requirement
+- AI disclosure headers ensure transparency about AI assistance in code generation
+- Production-ready solution that maintains development workflow compatibility
+
+---
+

@@ -3,6 +3,10 @@
  * Tool: GitHub Copilot (model: Claude Sonnet 4), date: 2025-09-23
  * Purpose: To create an email verification error page with search params parsing for email and username, maintaining visual consistency with auth page layouts.
  * Author Review: I validated correctness, security, and performance of the code.
+ *
+ * Tool: GitHub Copilot (model: Claude Sonnet 4), date: 2025-09-24
+ * Purpose: To fix Next.js 15 production build issues by replacing useSearchParams with window.location URLSearchParams for client-side URL parameter parsing.
+ * Author Review: I validated the solution works in both development and production builds, maintaining the same functionality while avoiding Suspense boundary requirements.
  */
 
 "use client";
@@ -12,7 +16,6 @@ import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import Link from "next/link";
 import { useState, useEffect } from "react";
-import { useSearchParams } from "next/navigation";
 import { resendEmailVerification } from "@/services/userServiceApi";
 import { handleApiError, handleApiSuccess } from "@/services/errorHandler";
 import { toast } from "sonner";
@@ -22,14 +25,16 @@ export default function ErrorPage() {
   const [username, setUsername] = useState("");
   const [isResending, setIsResending] = useState(false);
 
-  // Extract query parameters on mount using useSearchParams
-  const searchParams = useSearchParams();
+  // Extract query parameters on mount using window.location (client-side only)
   useEffect(() => {
-    const emailParam = searchParams.get("email") || "";
-    const usernameParam = searchParams.get("username") || "";
-    setEmail(emailParam);
-    setUsername(usernameParam);
-  }, [searchParams]);
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      const emailParam = params.get("email") || "";
+      const usernameParam = params.get("username") || "";
+      setEmail(emailParam);
+      setUsername(usernameParam);
+    }
+  }, []);
 
   const handleResendVerification = async () => {
     if (!email || !username) {
