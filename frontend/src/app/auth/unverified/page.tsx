@@ -14,6 +14,7 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import { useSearchParams } from "next/navigation";
+import { resendEmailVerification } from "@/services/userServiceApi";
 
 export default function UnverifiedPage() {
   const [isResending, setIsResending] = useState(false);
@@ -55,11 +56,7 @@ export default function UnverifiedPage() {
     setCanResend(false);
 
     try {
-      // TODO: Implement resend email verification API call
-      // await resendVerificationEmail();
-
-      // Simulate API call for now
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      await resendEmailVerification(username, email);
 
       toast.success("Verification email sent!", {
         description: "Please check your email inbox and spam folder.",

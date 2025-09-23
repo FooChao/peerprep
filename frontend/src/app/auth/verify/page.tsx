@@ -12,6 +12,8 @@ import Image from "next/image";
 import { useEffect } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { verfiyUserEmail } from "@/services/userServiceApi";
+import { handleApiError } from "@/services/errorHandler";
 
 export default function VerifyPage() {
   const router = useRouter();
@@ -34,37 +36,24 @@ export default function VerifyPage() {
       }
 
       try {
-        // TODO: Implement actual email verification API call
-        // const response = await verifyEmailToken(token);
+        await verfiyUserEmail(token, username, email);
 
-        // Simulate API call for now
-        await new Promise((resolve) => setTimeout(resolve, 2000));
-
-        // Simulate random success/failure for demo
-        const isSuccess = Math.random() > 0.5; // 70% success rate for demo
-
-        if (isSuccess) {
-          toast.success("Email verified successfully!", {
-            description: "You can now sign in to your account.",
-          });
-
-          setTimeout(() => {
-            router.push("/auth/login");
-          }, 1500);
-        } else {
-          throw new Error("Verification failed");
-        }
-      } catch (error: unknown) {
-        console.error("Email verification error:", error);
-        toast.error("Verification failed", {
-          description: "The verification link is invalid or has expired.",
+        toast.success("Email verified successfully!", {
+          description: "You can now sign in to your account.",
         });
 
+        setTimeout(() => {
+          router.push("/auth/login");
+        }, 1000);
+
+      } catch (error: unknown) {
+        console.error("Email verification error:", error);
+        handleApiError(error, "Email verification failed");
         setTimeout(() => {
           router.push(
             `/auth/error?email=${encodeURIComponent(email)}&username=${encodeURIComponent(username)}`,
           );
-        }, 1500);
+        }, 1000);
       }
     };
 

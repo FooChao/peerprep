@@ -55,7 +55,7 @@ export async function verifyUser(req, res) {
   }
 }
 
-export async function resendVerification(req, res) {
+export async function resendVerification(req, res) {  
   try {
     // extract username and email from query params
     const { username, email } = req.query;

@@ -8,14 +8,19 @@
 "use client";
 
 import { Card, CardTitle, CardHeader, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
+import { resendEmailVerification } from "@/services/userServiceApi";
+import { handleApiError, handleApiSuccess } from "@/services/errorHandler";
+import { toast } from "sonner";
 
 export default function ErrorPage() {
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
+  const [isResending, setIsResending] = useState(false);
 
   // Extract query parameters on mount using useSearchParams
   const searchParams = useSearchParams();
@@ -25,6 +30,27 @@ export default function ErrorPage() {
     setEmail(emailParam);
     setUsername(usernameParam);
   }, [searchParams]);
+
+  const handleResendVerification = async () => {
+    if (!email || !username) {
+      toast.error("Email and username are required to resend verification");
+      return;
+    }
+
+    setIsResending(true);
+    try {
+      await resendEmailVerification(username, email);
+      handleApiSuccess(
+        "Verification email sent!",
+        "Please check your email for the verification link.",
+        {}
+      );
+    } catch (error) {
+      handleApiError(error, "Failed to resend verification email");
+    } finally {
+      setIsResending(false);
+    }
+  };
 
   return (
     <div className="h-screen flex flex-col items-center justify-center">
@@ -60,16 +86,22 @@ export default function ErrorPage() {
             </p>
 
             <div className="flex flex-col gap-4">
-              <Link
-                href={
-                  email
-                    ? `/auth/check-email?email=${encodeURIComponent(email)}&username=${encodeURIComponent(username)}`
-                    : "/auth/signup"
-                }
-                className="w-full bg-black text-white font-medium py-2 px-4 rounded-md transition-colors"
-              >
-                {email ? "Resend Verification Email" : "Back to Sign Up"}
-              </Link>
+              {email ? (
+                <Button
+                  onClick={handleResendVerification}
+                  disabled={isResending}
+                  className="w-full bg-black text-white font-medium py-2 px-4 rounded-md transition-colors hover:bg-gray-800 disabled:bg-gray-400"
+                >
+                  {isResending ? "Sending..." : "Resend Verification Email"}
+                </Button>
+              ) : (
+                <Link
+                  href="/auth/signup"
+                  className="w-full bg-black text-white font-medium py-2 px-4 rounded-md transition-colors block text-center"
+                >
+                  Back to Sign Up
+                </Link>
+              )}
 
               <Link
                 href="/auth/login"

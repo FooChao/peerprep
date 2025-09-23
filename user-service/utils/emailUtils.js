@@ -61,17 +61,21 @@ export function makeTransport() {
 export function makeVerificationLink(email, username, rawToken) {
   // TODO: Update base URL logic if deploying to a real production domain
   let base;
-  if (process.env.NODE_ENV === "development") {
-    base = "http://localhost:3000";
-  } else {
+  if (process.env.NODE_ENV === "production") {
     base = "http://localhost";
+  } else {
+    base = "http://localhost:3000";
   }
+  
   const params = new URLSearchParams({
     email: email,
     username: username,
     token: rawToken,
   });
-  return `${base}/auth/verify?${params.toString()}`;
+  
+  const fullUrl = `${base}/auth/verify?${params.toString()}`;
+  
+  return fullUrl;
 }
 
 /**
