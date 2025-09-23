@@ -522,3 +522,67 @@ Request information on how to add password to redis instance in compose.yml file
 
 - Validated that command is accurate by checking with stackoverflow posts
 - Modified output such that password is hidden and variable substitution is used by adding password to a.env file
+
+## Entry 15
+
+# Date/Time:
+
+2025-09-23 10:45
+
+# Tool:
+
+ChatGPT (model: GPT 5.0)
+
+# Prompt/Command:
+
+Request information on why "ReferenceError: window is not defined" occurs when trying
+to implement Yjs binding with Monaco editor
+
+# Output Summary:
+
+- Provided explanation and the imports that were causing the issue and possible solutions
+
+# Action Taken:
+
+- [ ] Accepted as-is
+- [x] Modified
+- [ ] Rejected
+
+# Author Notes:
+
+- Validated that error occured due to NextJs trying to render components on server firsts
+  but some imports required the window object which was specific to the browser
+- Researched online on how to best tackle the issue and utillised dynamic imports for
+  affected component
+- Tested that error no longer occurs
+
+## Entry 16
+
+# Date/Time:
+
+2025-09-23 20:14
+
+# Tool:
+
+ChatGPT (model: GPT 5.0)
+
+# Prompt/Command:
+
+Request information on how to maintain socket connection and prevent timeout
+
+# Output Summary:
+
+- Provided the code outline on how to implement heartbeat mechanism
+
+# Action Taken:
+
+- [ ] Accepted as-is
+- [x] Modified
+- [ ] Rejected
+
+# Author Notes:
+
+- Validated that such mechanism is a good practice to keep connection alive
+- Modified output such that client is focused on sending "ping" packet and server will
+  return "pong"
+- Tested that connection is now persistent
