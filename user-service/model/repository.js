@@ -20,7 +20,7 @@ export async function createUser(username, email, password) {
 }
 
 export async function findUserByEmail(email) {
-  return UserModel.findOne({ email });
+  return UserModel.findOne({ emailCanonical: email.toLowerCase() });
 }
 
 export async function findUserById(userId) {
@@ -35,7 +35,7 @@ export async function findUserByUsernameOrEmail(username, email) {
   return UserModel.findOne({
     $or: [
       { username },
-      { email },
+      { emailCanonical: email.toLowerCase() },
     ],
   });
 }
@@ -45,7 +45,7 @@ export async function findUserByUsernameAndEmail(username, email) {
   return UserModel.findOne({
     $and: [
       { username },
-      { email },
+      { emailCanonical: email.toLowerCase() },
     ],
   });
 }
@@ -55,14 +55,20 @@ export async function findAllUsers() {
 }
 
 export async function updateUserById(userId, username, email, password) {
+  const updateFields = {
+    username,
+    password,
+  };
+  
+  if (email) {
+    updateFields.email = email;
+    updateFields.emailCanonical = email.toLowerCase();
+  }
+  
   return UserModel.findByIdAndUpdate(
     userId,
     {
-      $set: {
-        username,
-        email,
-        password,
-      },
+      $set: updateFields,
     },
     { new: true },  // return the updated user
   );
