@@ -27,7 +27,7 @@ export default function ErrorPage() {
 
   // Extract query parameters on mount using window.location (client-side only)
   useEffect(() => {
-    if (typeof window !== 'undefined') {
+    if (typeof window !== "undefined") {
       const params = new URLSearchParams(window.location.search);
       const emailParam = params.get("email") || "";
       const usernameParam = params.get("username") || "";
@@ -48,7 +48,7 @@ export default function ErrorPage() {
       handleApiSuccess(
         "Verification email sent!",
         "Please check your email for the verification link.",
-        {}
+        {},
       );
     } catch (error) {
       handleApiError(error, "Failed to resend verification email");

@@ -153,24 +153,28 @@ const signup = async (username: string, email: string, password: string) => {
   }
 };
 
-const verfiyUserEmail = async (token: string, username: string, email:string) => {
+const verfiyUserEmail = async (
+  token: string,
+  username: string,
+  email: string,
+) => {
   try {
     const apiClient = createApiClient();
     const response = await apiClient.get(
-      `${API_ENDPOINTS.VERIFICATION_SERVICE}/verify?token=${encodeURIComponent(token)}&username=${encodeURIComponent(username)}&email=${encodeURIComponent(email)}`
+      `${API_ENDPOINTS.VERIFICATION_SERVICE}/verify?token=${encodeURIComponent(token)}&username=${encodeURIComponent(username)}&email=${encodeURIComponent(email)}`,
     );
     return response;
   } catch (error) {
     console.error("Error verifying email:", error);
     throw error;
   }
-}
+};
 
 const resendEmailVerification = async (username: string, email: string) => {
   try {
     const apiClient = createApiClient();
     const response = await apiClient.post(
-      `${API_ENDPOINTS.VERIFICATION_SERVICE}/resend?username=${encodeURIComponent(username)}&email=${encodeURIComponent(email)}`
+      `${API_ENDPOINTS.VERIFICATION_SERVICE}/resend?username=${encodeURIComponent(username)}&email=${encodeURIComponent(email)}`,
     );
     return response;
   } catch (error) {
@@ -181,4 +185,3 @@ const resendEmailVerification = async (username: string, email: string) => {
 
 // Export configuration
 export { verifyToken, login, signup, verfiyUserEmail, resendEmailVerification };
-

@@ -365,8 +365,8 @@ export default function SignupForm() {
 
             {/* Register Button and already have an account*/}
             <div className="flex justify-center mt-4">
-              <Button 
-                className="w-full" 
+              <Button
+                className="w-full"
                 onClick={onRegister}
                 disabled={isLoading}
               >
@@ -387,8 +387,8 @@ export default function SignupForm() {
               <Link
                 href="/auth/login"
                 className={`ml-3 ${
-                  isLoading 
-                    ? "text-gray-400 cursor-not-allowed" 
+                  isLoading
+                    ? "text-gray-400 cursor-not-allowed"
                     : "text-blue-500 hover:underline"
                 }`}
                 onClick={(e) => isLoading && e.preventDefault()}

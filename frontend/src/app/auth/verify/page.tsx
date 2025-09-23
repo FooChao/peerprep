@@ -24,7 +24,7 @@ export default function VerifyPage() {
 
   useEffect(() => {
     const verifyEmail = async () => {
-      if (typeof window !== 'undefined') {
+      if (typeof window !== "undefined") {
         const params = new URLSearchParams(window.location.search);
         const token = params.get("token");
         const email = params.get("email") || "";
@@ -50,7 +50,6 @@ export default function VerifyPage() {
           setTimeout(() => {
             router.push("/auth/login");
           }, 1000);
-
         } catch (error: unknown) {
           console.error("Email verification error:", error);
           handleApiError(error, "Email verification failed");

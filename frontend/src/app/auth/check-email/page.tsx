@@ -28,7 +28,7 @@ export default function CheckEmailPage() {
 
   // Extract query parameters on mount using window.location (client-side only)
   useEffect(() => {
-    if (typeof window !== 'undefined') {
+    if (typeof window !== "undefined") {
       const params = new URLSearchParams(window.location.search);
       const emailParam = params.get("email") || "";
       const usernameParam = params.get("username") || "";
@@ -61,7 +61,6 @@ export default function CheckEmailPage() {
     setCanResend(false);
 
     try {
-
       await resendEmailVerification(username, email);
 
       toast.success("Verification email sent!", {

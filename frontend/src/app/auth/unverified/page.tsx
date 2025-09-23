@@ -28,7 +28,7 @@ export default function UnverifiedPage() {
 
   // Extract query parameters on mount using window.location (client-side only)
   useEffect(() => {
-    if (typeof window !== 'undefined') {
+    if (typeof window !== "undefined") {
       const params = new URLSearchParams(window.location.search);
       const emailParam = params.get("email") || "";
       const usernameParam = params.get("username") || "";
