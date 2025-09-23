@@ -82,19 +82,21 @@ export default function LoginForm() {
         "response" in error &&
         typeof error?.response === "object" &&
         error?.response !== null &&
-        typeof error?.response === "object" &&
+        "data" in error?.response &&
+        typeof error?.response?.data === "object" &&
+        error?.response?.data !== null &&
         "status" in error?.response &&
         error?.response?.status === 403 &&
-        "error" in error?.response &&
-        error?.response?.error === "UNVERIFIED_EMAIL" &&
-        "canResend" in error?.response &&
-        error?.response?.canResend &&
-        "username" in error?.response &&
-        typeof error?.response?.username === "string" &&
-        error?.response?.username
+        "error" in error?.response?.data &&
+        error?.response?.data?.error === "UNVERIFIED_EMAIL" &&
+        "canResend" in error?.response?.data &&
+        error?.response?.data?.canResend &&
+        "username" in error?.response?.data &&
+        typeof error?.response?.data?.username === "string" &&
+        error?.response?.data?.username
       ) {
         router.push(
-          `/auth/unverified?email=${encodeURIComponent(email)}?username=${encodeURIComponent(error?.response?.username)}`,
+          `/auth/unverified?email=${encodeURIComponent(email)}&username=${encodeURIComponent(error?.response?.data?.username)}`,
         );
         return;
       }

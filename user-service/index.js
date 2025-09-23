@@ -1,8 +1,16 @@
+/**
+ * AI Assistance Disclosure:
+ * Tool: GitHub Copilot (model: Claude Sonnet 4), date: 2025-09-24
+ * Purpose: To update the main application index to include verification routes for email verification functionality.
+ * Author Review: I validated correctness, security, and performance of the code.
+ */
+
 import express from "express";
 import cors from "cors";
 
 import userRoutes from "./routes/user-routes.js";
 import authRoutes from "./routes/auth-routes.js";
+import verificationRoutes from "./routes/verification-routes.js";
 
 const app = express();
 
@@ -32,6 +40,7 @@ app.use((req, res, next) => {
 
 app.use("/users", userRoutes);
 app.use("/auth", authRoutes);
+app.use("/verification", verificationRoutes);
 
 app.get("/", (req, res, next) => {
   console.log("Sending Greetings!");

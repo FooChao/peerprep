@@ -8,14 +8,13 @@ const UserVerifyModelSchema = new Schema({
     ref: 'UserModel',
     required: true,
     unique: false, // multiple verification tokens can be generated for the same user
+    index: true, // index the userId field for faster lookups
   },
-  token: {
+  token: { // should be a hashed token for security
     type: String,
     required: true,
     unique: true,
     index: true, // index the token field for faster lookups
-    minlength: 16, // ensure the token has a minimum length for security
-    maxlength: 64, // ensure the token has a maximum length to prevent excessively long tokens
   },
   createdAt: {
     type: Date,
