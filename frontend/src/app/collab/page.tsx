@@ -1,5 +1,5 @@
 import ChatComponent from "../components/collab/ChatComponent";
-import CodingComponent from "../components/collab/CodingComponent";
+import CodingComponentWrapper from "../components/collab/CodingComponentWrapper";
 import QuestionComponent from "../components/collab/QuestionComponent";
 import SessionHeader from "../components/collab/SessionHeader";
 
@@ -14,7 +14,7 @@ export default function CollabPage() {
         </div>
 
         <div className="flex-[2]">
-          <CodingComponent />
+          <CodingComponentWrapper />
         </div>
 
         <div className="flex-1 p-5">
