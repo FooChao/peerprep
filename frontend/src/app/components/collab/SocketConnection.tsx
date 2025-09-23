@@ -10,10 +10,10 @@ import * as Y from "yjs";
 export default function socketCommunication(
   userId: string,
   sessionId: string,
-  ydoc: Y.Doc
+  ydoc: Y.Doc,
 ) {
   const clientWS: WebSocket = new WebSocket(
-    `ws://localhost/collab-socket/${userId}/${sessionId}`
+    `ws://localhost/collab-socket/${userId}/${sessionId}`,
   );
 
   clientWS.binaryType = "arraybuffer";
