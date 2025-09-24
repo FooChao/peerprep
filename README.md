@@ -21,12 +21,12 @@
 1. Change the .env file at user-service to `ENV=PROD`
 2. Ensure that you have set the correct `MONGODB_URI` in the .env file at user-service
 
-### Running the project (development)
+#### Running the project (development)
 1. Run `npm run dev` to start up the user-service and frontend concurrently
 2. ALternatively, you can run `cd user-service && npm run dev` and `cd frontend && npm run dev` in separate terminal windows to start up the user-service and frontend respectively
 3. The frontend will be running at `localhost:3000` and user-service will be running at `localhost:5000`
 
-### Testing Docker production build
+#### Testing Docker production build
 1. Run `docker-compose up --build` to build and start up the user-service and frontend in docker containers
 2. For local DB, ensure that you have changed the .env file at user-service to `ENV=local` before running the command and run `docker-compose --profile localdb up --build` instead
 3. TO run the containers run `docker-compose up` if using cloud DB or `docker-compose --profile localdb up` if using local DB
