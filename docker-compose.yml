@@ -67,6 +67,8 @@ services:
     command: npx nodemon server.js
     env_file:
       - ./collab-service/.env
+    environment:
+      - REDIS_HOST=redis-collab-service
 
   ### NOTE: LOCAL DATABASE SERVICES YET TO BE TESTED BY ME DO NOT USE YET ###
 
