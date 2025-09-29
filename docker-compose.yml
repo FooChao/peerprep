@@ -55,6 +55,7 @@ services:
       - ./user-service/.env # Environment variables for user-service
     environment:
       - NODE_ENV=production # Set Node.js to production mode
+      - DB_LOCAL_URI=mongodb://root:example@mongodb-user-services:27017 # Override for container
 
   collab-service:
     image: cjz/collab-service
@@ -62,9 +63,6 @@ services:
     build:
       context: ./collab-service
       dockerfile: Dockerfile
-    volumes:
-      - ./collab-service:/app
-    command: npx nodemon server.js
     env_file:
       - ./collab-service/.env
     environment:
@@ -76,6 +74,8 @@ services:
   mongodb-user-services:
     image: mongo:7.0.12
     container_name: peerprep-mongodb-user-services
+    ports:
+      - "27017:27017" # Expose MongoDB port to host
     volumes:
       - mongodb-data-user-services:/data/db # Persistent data storage
     env_file:
@@ -87,8 +87,8 @@ services:
   mongo-express:
     image: mongo-express:1.0.2
     container_name: peerprep-mongo-express
-    expose:
-      - "8081" # Internal port only - accessed via API Gateway at /admin/
+    ports:
+      - "8081:8081" # Expose admin interface on host port 8081
     env_file:
       - ./mongo-express/.env # Connection settings
     depends_on:

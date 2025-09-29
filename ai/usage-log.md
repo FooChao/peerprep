@@ -463,6 +463,8 @@ Request to create a simple client-side auth guard that prevents browser back nav
 - UX improvements: immediate redirect prevents brief flash of protected content
 - Maintainability: simple, reusable component for future auth requirements
 
+---
+
 ## Entry 13
 
 # Date/Time:
@@ -523,6 +525,8 @@ Request information on how to add password to redis instance in compose.yml file
 - Validated that command is accurate by checking with stackoverflow posts
 - Modified output such that password is hidden and variable substitution is used by adding password to a.env file
 
+---
+
 ## Entry 15
 
 # Date/Time:
@@ -556,6 +560,8 @@ to implement Yjs binding with Monaco editor
   affected component
 - Tested that error no longer occurs
 
+---
+
 ## Entry 16
 
 # Date/Time:
@@ -586,3 +592,5 @@ Request information on how to maintain socket connection and prevent timeout
 - Modified output such that client is focused on sending "ping" packet and server will
   return "pong"
 - Tested that connection is now persistent
+
+---
