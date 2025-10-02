@@ -1,6 +1,6 @@
 /**
  * AI Assistance Disclosure:
- * Tool: ChatGPT (model: CHatGPT 5 thinking), date: 2025-09-24
+ * Tool: ChatGPT (model: ChatGPT 5 thinking), date: 2025-09-24
  * Purpose: To create email utility functions for sending verification emails using Nodemailer with SMTP configuration and verification link generation.
  * Author Review: I validated correctness, security, and performance of the code.
  */
