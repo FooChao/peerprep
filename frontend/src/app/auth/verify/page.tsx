@@ -16,7 +16,7 @@ import Image from "next/image";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { verfiyUserEmail } from "@/services/userServiceApi";
+import { verifyUserEmail } from "@/services/userServiceApi";
 import { handleApiError } from "@/services/errorHandler";
 
 export default function VerifyPage() {
@@ -41,7 +41,7 @@ export default function VerifyPage() {
         }
 
         try {
-          await verfiyUserEmail(token, username, email);
+          await verifyUserEmail(token, username, email);
 
           toast.success("Email verified successfully!", {
             description: "You can now sign in to your account.",

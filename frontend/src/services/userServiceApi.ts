@@ -153,7 +153,7 @@ const signup = async (username: string, email: string, password: string) => {
   }
 };
 
-const verfiyUserEmail = async (
+const verifyUserEmail = async (
   token: string,
   username: string,
   email: string,
@@ -184,4 +184,4 @@ const resendEmailVerification = async (username: string, email: string) => {
 };
 
 // Export configuration
-export { verifyToken, login, signup, verfiyUserEmail, resendEmailVerification };
+export { verifyToken, login, signup, verifyUserEmail, resendEmailVerification };

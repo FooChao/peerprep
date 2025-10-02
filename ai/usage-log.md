@@ -856,3 +856,25 @@ Fix Next.js 15 production build failures caused by useSearchParams() requiring S
 
 ---
 
+## Entry 24
+
+# Date/Time:
+2025-10-02 08:08
+
+# Tool:
+GitHub Copilot (model: unknown) on GitHub
+
+# Prompt/Command:
+Request for a code review of PR #18 https://github.com/CS3219-AY2526Sem1/cs3219-ay2526s1-project-g01/pull/18
+
+# Output Summary:
+- Identified several grammar and spelling mistakes in comments and variable names
+
+# Action Taken:
+- [x] Accepted as-is
+- [ ] Modified
+- [ ] Rejected
+
+# Author Notes:
+- Validated the correctness of the spelling changes in the code
+
