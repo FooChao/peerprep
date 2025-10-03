@@ -3,7 +3,8 @@ import {
   findUserVerifyRecordByTokenAndId as _findUserVerifyRecordByTokenAndId, 
   updateUserVerificationStatusById as _updateUserVerificationStatusById,
   deleteUserVerifyRecordByUserId as _deleteUserVerifyRecordByUserId,
-  createUserVerifyRecord as _createUserVerifyRecord
+  createUserVerifyRecord as _createUserVerifyRecord,
+  findUserVerifyRecordById as _findUserVerifyRecordById,
 } from "../model/repository.js";
 import crypto from "crypto";
 import { makeVerificationLink, sendVerificationEmail } from "../utils/emailUtils.js";
@@ -75,6 +76,14 @@ export async function resendVerification(req, res) {
     if (user.verified) {
       // send error message
       return res.status(400).json({ message: "User already verified" });
+    }
+    // check if any verification is resend too soon (within 30 seconds)
+    const existingRecord = await _findUserVerifyRecordById(user._id);
+    if (existingRecord.length > 0) {
+      const timeSinceLastSent = Date.now() - new Date(existingRecord[0].createdAt).getTime();
+      if (timeSinceLastSent < 30 * 1000) { // 30 seconds
+        return res.status(429).json({ message: "Verification email resent too soon. Please wait before trying again." });
+      }
     }
 
     // else, proceed to resend verification email

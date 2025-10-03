@@ -17,13 +17,14 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { resendEmailVerification } from "@/services/userServiceApi";
-import { handleApiError, handleApiSuccess } from "@/services/errorHandler";
 import { toast } from "sonner";
 
 export default function ErrorPage() {
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [isResending, setIsResending] = useState(false);
+  const [cooldownSeconds, setCooldownSeconds] = useState(0);
+  const [canResend, setCanResend] = useState(true);
 
   // Extract query parameters on mount using window.location (client-side only)
   useEffect(() => {
@@ -36,22 +37,53 @@ export default function ErrorPage() {
     }
   }, []);
 
-  const handleResendVerification = async () => {
-    if (!email || !username) {
-      toast.error("Email and username are required to resend verification");
-      return;
+  // Cooldown timer effect
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+    if (cooldownSeconds > 0) {
+      interval = setInterval(() => {
+        setCooldownSeconds((prev) => {
+          if (prev <= 1) {
+            setCanResend(true);
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
     }
+    return () => clearInterval(interval);
+  }, [cooldownSeconds]);
+
+  const handleResendVerification = async () => {
+    if (!canResend) return;
 
     setIsResending(true);
+    setCanResend(false);
+
     try {
       await resendEmailVerification(username, email);
-      handleApiSuccess(
-        "Verification email sent!",
-        "Please check your email for the verification link.",
-        {},
-      );
-    } catch (error) {
-      handleApiError(error, "Failed to resend verification email");
+
+      toast.success("Verification email sent!", {
+        description: "Please check your email inbox and spam folder.",
+      });
+
+      // Start 30-second cooldown
+      setCooldownSeconds(30);
+    } catch (error: unknown) {
+      console.error("Resend email error:", error);
+      // Only allow retry on error if not rate limited (error code !== 429)
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      if ((error as any)?.response?.status !== 429) {
+        toast.error("Failed to resend email", {
+          description: "Please try again later.",
+        });
+        setCanResend(true);
+      } else {
+        toast.error("An email was recently sent", {
+          description: "Please wait before trying again.",
+        });
+        setCooldownSeconds(30); // Enforce cooldown on rate limit
+      }
     } finally {
       setIsResending(false);
     }
@@ -94,10 +126,14 @@ export default function ErrorPage() {
               {email ? (
                 <Button
                   onClick={handleResendVerification}
-                  disabled={isResending}
+                  disabled={isResending || !canResend}
                   className="w-full bg-black text-white font-medium py-2 px-4 rounded-md transition-colors hover:bg-gray-800 disabled:bg-gray-400"
                 >
-                  {isResending ? "Sending..." : "Resend Verification Email"}
+                  {isResending
+                    ? "Sending..."
+                    : !canResend
+                      ? `Resend in ${cooldownSeconds}s`
+                      : "Resend Verification Email"}
                 </Button>
               ) : (
                 <Link

@@ -118,6 +118,10 @@ export async function findUserVerifyRecordByTokenAndId(token, userId) {
   });
 }
 
+export async function findUserVerifyRecordById (userId) {
+  return UserVerifyModel.find({ userId });
+}
+
 export async function deleteUserVerifyRecordByUserId(userId) {
   return UserVerifyModel.deleteMany({ userId });
 }

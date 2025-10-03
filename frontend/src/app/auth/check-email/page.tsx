@@ -71,10 +71,19 @@ export default function CheckEmailPage() {
       setCooldownSeconds(30);
     } catch (error: unknown) {
       console.error("Resend email error:", error);
-      toast.error("Failed to resend email", {
-        description: "Please try again later.",
-      });
-      setCanResend(true); // Allow retry on error
+      // Only allow retry on error if not rate limited (error code !== 429)
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      if ((error as any)?.response?.status !== 429) {
+        toast.error("Failed to resend email", {
+          description: "Please try again later.",
+        });
+        setCanResend(true);
+      } else {
+        toast.error("An email was recently sent", {
+          description: "Please wait before trying again.",
+        });
+        setCooldownSeconds(30); // Enforce cooldown on rate limit
+      }
     } finally {
       setIsResending(false);
     }
