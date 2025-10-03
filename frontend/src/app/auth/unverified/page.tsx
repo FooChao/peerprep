@@ -98,14 +98,14 @@ export default function UnverifiedPage() {
         height={200}
       />
 
-      <Card className="min-h-[40%] min-w-[40%] mt-8">
+      <Card className="min-h-[40%] min-w-[40%] mt-3">
         <CardHeader className="mt-5">
           <CardTitle className="text-center text-3xl font-bold">
             Email Verification Required
           </CardTitle>
         </CardHeader>
 
-        <CardContent className="px-15 pt-10 text-center">
+        <CardContent className="px-15 pt-2 text-center">
           <div className="flex flex-col gap-6">
             <p className="text-lg text-gray-600">
               Your email address is unverified. Please check your email inbox
