@@ -32,6 +32,14 @@ function handlePing(ws, message) {
   return false;
 }
 
+function handleCursorUpdates(message) {
+  const text = message.toString();
+  if (text.startsWith("{")) {
+    return text;
+  } else {
+    return null;
+  }
+}
 function broadcastToRoom(webSocketServer, websocket, roomId, update) {
   webSocketServer.clients.forEach((client) => {
     logger.info(`client ${client.userId}`);
@@ -62,6 +70,14 @@ function handleSocketConnection(wss, ws, request, roomToDocMap) {
     if (handlePing(ws, update)) {
       return;
     }
+    const cursorData = handleCursorUpdates(update);
+
+    if (cursorData != null) {
+      logger.info(`Broadcasting cursor updates ${cursorData}`);
+      broadcastToRoom(wss, ws, roomId, cursorData);
+      return;
+    }
+
     logger.info(`Message Received from ${ws.userId}`);
     const yUpdate = new Uint8Array(update);
     Y.applyUpdate(doc, yUpdate);
