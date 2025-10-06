@@ -9,6 +9,7 @@ import app from "./app.js";
 import { WebSocketServer } from "ws";
 import { startDB } from "./db/connection.js";
 import { handleSocketConnection } from "./websockets/socket-connection.js";
+import logger from "./utils/logger.js";
 
 const port = process.env.PORT;
 const server = http.createServer(app);
@@ -34,5 +35,18 @@ server.on("upgrade", (request, socket, head) => {
 webSocketServer.on("connection", (ws, request) => {
   handleSocketConnection(webSocketServer, ws, request, roomToData);
 });
+
+setInterval(() => {
+  webSocketServer.clients.forEach((ws) => {
+    if (!ws.isAlive) {
+      return ws.terminate();
+    }
+    ws.isAlive = false;
+    ws.ping();
+    logger.info("ping sent to client socket");
+  });
+}, 30000);
+
+webSocketServer.on("close", () => clearInterval(interval));
 
 startServer();
