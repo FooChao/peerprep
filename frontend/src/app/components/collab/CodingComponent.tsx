@@ -45,10 +45,14 @@ export default function CodingComponent() {
     const binding: MonacoBinding = new MonacoBinding(
       yText,
       editorInstance.getModel()!,
-      new Set([editorInstance]),
+      new Set([editorInstance])
     );
-
-    const clientWS: WebSocket = socketCommunication(user_id, session_id, ydoc);
+    const clientWS: WebSocket = socketCommunication(
+      user_id,
+      session_id,
+      ydoc,
+      editorInstance
+    );
     return () => {
       console.log("remove client websocket, binding and ydoc");
       clientWS.close();
