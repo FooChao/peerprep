@@ -15,6 +15,7 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { ChevronDown, CircleUser } from "lucide-react";
 import socketCommunication from "./SocketConnection";
+import { useUser } from "@/contexts/UserContext";
 
 export default function CodingComponent() {
   const [codeContent, setCodeContent] = useState<string>("");
@@ -22,10 +23,10 @@ export default function CodingComponent() {
 
   const [editorInstance, setEditorInstance] =
     useState<monaco.editor.IStandaloneCodeEditor>();
+  const { user } = useUser();
+  const user_id: string = user?.username || "1";
 
-  const user_id = String(Math.floor(Math.random() * 10000));
   const session_id = "123"; //HARDCODED FOR TESTING
-
   function setInitialContent(value: string | undefined) {
     if (value != undefined) {
       setCodeContent(value);
