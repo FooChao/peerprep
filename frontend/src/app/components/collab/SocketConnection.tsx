@@ -23,7 +23,7 @@ function initEditor(
   cursorCollections: Record<string, monaco.editor.IEditorDecorationsCollection>,
   editorInstance: monaco.editor.IStandaloneCodeEditor,
   ydoc: Y.Doc,
-  ws: WebSocket
+  ws: WebSocket,
 ) {
   console.log("Connected to server Websocket Succesfully");
   cursorCollections[userId] = editorInstance.createDecorationsCollection([]);
@@ -52,7 +52,7 @@ function initEditor(
 function onEditorChangeHandler(
   update: Uint8Array,
   origin: string,
-  clientWS: WebSocket
+  clientWS: WebSocket,
 ) {
   if (origin != "remote" && clientWS.readyState === WebSocket.OPEN) {
     clientWS.send(update);
@@ -63,7 +63,7 @@ function onCursorChangeHandler(
   cursorCollections: Record<string, monaco.editor.IEditorDecorationsCollection>,
   event: monaco.editor.ICursorSelectionChangedEvent,
   clientWS: WebSocket,
-  userId: string
+  userId: string,
 ) {
   const { startLineNumber, startColumn, endLineNumber, endColumn } =
     event.selection;
@@ -87,7 +87,7 @@ function onCursorChangeHandler(
         startLineNumber,
         startColumn,
         endLineNumber,
-        endColumn
+        endColumn,
       ),
       options: {
         className: "local-cursor",
@@ -100,7 +100,7 @@ function onCursorChangeHandler(
 function onPartnerCursorChangeHandler(
   messageEvent: MessageEvent,
   editorInstance: monaco.editor.IStandaloneCodeEditor,
-  cursorCollections: Record<string, monaco.editor.IEditorDecorationsCollection>
+  cursorCollections: Record<string, monaco.editor.IEditorDecorationsCollection>,
 ) {
   const data = JSON.parse(messageEvent.data);
 
@@ -118,7 +118,7 @@ function onPartnerCursorChangeHandler(
           startLineNumber,
           startColumn,
           endLineNumber,
-          endColumn
+          endColumn,
         ),
         options: {
           className: "remote-cursor",
@@ -133,10 +133,10 @@ export default function socketCommunication(
   userId: string,
   sessionId: string,
   ydoc: Y.Doc,
-  editorInstance: monaco.editor.IStandaloneCodeEditor
+  editorInstance: monaco.editor.IStandaloneCodeEditor,
 ) {
   const clientWS: WebSocket = new WebSocket(
-    `ws://localhost/collab-socket/${userId}/${sessionId}`
+    `ws://localhost/collab-socket/${userId}/${sessionId}`,
   );
 
   const cursorCollections: Record<
@@ -146,12 +146,12 @@ export default function socketCommunication(
 
   createInlineStyle(
     "remote-cursor",
-    "border-left: 2px solid rgba(255, 64, 11, 1);"
+    "border-left: 2px solid rgba(255, 64, 11, 1);",
   );
 
   createInlineStyle(
     "local-cursor",
-    "border-left: 2px solid rgba(46, 216, 246, 1)"
+    "border-left: 2px solid rgba(46, 216, 246, 1)",
   );
 
   clientWS.binaryType = "arraybuffer";
@@ -166,7 +166,7 @@ export default function socketCommunication(
         onPartnerCursorChangeHandler(
           messageEvent,
           editorInstance,
-          cursorCollections
+          cursorCollections,
         );
         return;
       } else if (payloadObject.type === "sync") {
@@ -180,11 +180,11 @@ export default function socketCommunication(
   };
 
   ydoc.on("update", (update: Uint8Array, origin: string) =>
-    onEditorChangeHandler(update, origin, clientWS)
+    onEditorChangeHandler(update, origin, clientWS),
   );
 
   editorInstance.onDidChangeCursorSelection((event) =>
-    onCursorChangeHandler(cursorCollections, event, clientWS, userId)
+    onCursorChangeHandler(cursorCollections, event, clientWS, userId),
   );
 
   clientWS.onerror = (error) => {
