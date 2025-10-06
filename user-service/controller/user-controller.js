@@ -1,5 +1,13 @@
+/**
+ * AI Assistance Disclosure:
+ * Tool: GitHub Copilot (model: Claude Sonnet 4), date: 2025-09-24
+ * Purpose: To update user creation with email verification functionality and proper error handling for email sending failures.
+ * Author Review: I validated correctness, security, and performance of the code.
+ */
+
 import bcrypt from "bcrypt";
 import { isValidObjectId } from "mongoose";
+import crypto from "crypto";
 import {
   createUser as _createUser,
   deleteUserById as _deleteUserById,
@@ -10,7 +18,10 @@ import {
   findUserByUsernameOrEmail as _findUserByUsernameOrEmail,
   updateUserById as _updateUserById,
   updateUserPrivilegeById as _updateUserPrivilegeById,
+  createUserVerifyRecord as _createUserVerifyRecord,
+  deleteUserVerifyRecordByUserId as _deleteUserVerifyRecordByUserId,
 } from "../model/repository.js";
+import { makeVerificationLink, sendVerificationEmail } from "../utils/emailUtils.js";
 
 export async function createUser(req, res) {
   try {
@@ -28,10 +39,32 @@ export async function createUser(req, res) {
       const salt = bcrypt.genSaltSync(10);
       const hashedPassword = bcrypt.hashSync(password, salt);
       const createdUser = await _createUser(username, email, hashedPassword);
-      return res.status(201).json({
-        message: `Created new user ${username} successfully`,
-        data: formatUserResponse(createdUser),
-      });
+      
+      try {
+        // Create verification token
+        const rawToken = crypto.randomBytes(32).toString("hex");
+        const hashedToken = crypto.createHash("sha256").update(rawToken).digest("hex");
+        
+        // Save verification token to database
+        await _createUserVerifyRecord(createdUser._id, hashedToken);
+        
+        // Create verification link
+        const verifyUrl = makeVerificationLink(createdUser.email, createdUser.username, rawToken);
+        
+        // Send verification email
+        await sendVerificationEmail(createdUser.email, verifyUrl);
+        
+        return res.status(201).json({
+          message: `Created new user ${username} successfully. Please check your email for verification.`,
+          data: formatUserResponse(createdUser),
+        });
+      } catch (emailError) {
+        // If email sending fails, clean up the created user
+        console.error("Email sending failed:", emailError);
+        await _deleteUserById(createdUser._id);
+        await _deleteUserVerifyRecordByUserId(createdUser._id);
+        return res.status(500).json({ message: "Failed to send verification email. Please try again." });
+      }
     } else {
       return res.status(400).json({ message: "username and/or email and/or password are missing" });
     }
@@ -166,6 +199,7 @@ export function formatUserResponse(user) {
     username: user.username,
     email: user.email,
     isAdmin: user.isAdmin,
+    verified: user.verified,
     createdAt: user.createdAt,
   };
 }
