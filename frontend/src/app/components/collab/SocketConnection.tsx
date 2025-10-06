@@ -1,14 +1,13 @@
 /**
  * AI Assistance Disclosure:
- * Tool: ChatGPT (model: GPT 5.0), date: 2025-09-23
- * Purpose: To understand how to implement heart-beat mechanism and prevent socket timeout
- * Author Review: I validated correctness, security, and performance of the code and modified the code to fit use case
- *
  * Tool: ChatGPT(model: GPT 5.0), date: 2025-10-06
  * Purpose: To understand how to track and send cursor information between users
  * Author Review: I validated correctness, security, and performance of the method suggested and modified areas such as
  * uing createDecorationsCollection instead of deltaDecorations suggested by the model
  */
+
+// With Reference to https://stackoverflow.com/questions/68453051/decode-a-uint8array-into-a-json for uint8array to string conversion
+
 import * as Y from "yjs";
 import * as monaco from "monaco-editor";
 
@@ -19,10 +18,12 @@ function createInlineStyle(className: string, styles: string) {
   document.head.appendChild(style);
 }
 
-function initCursors(
+function initEditor(
   userId: string,
   cursorCollections: Record<string, monaco.editor.IEditorDecorationsCollection>,
-  editorInstance: monaco.editor.IStandaloneCodeEditor
+  editorInstance: monaco.editor.IStandaloneCodeEditor,
+  ydoc: Y.Doc,
+  ws: WebSocket
 ) {
   console.log("Connected to server Websocket Succesfully");
   cursorCollections[userId] = editorInstance.createDecorationsCollection([]);
@@ -36,6 +37,16 @@ function initCursors(
       },
     },
   ]);
+  const initialState: Uint8Array = Y.encodeStateVector(ydoc);
+  const stateAsString: string = Buffer.from(initialState).toString("base64");
+
+  const payload = {
+    type: "sync",
+    userId: userId,
+    ydocState: stateAsString,
+  };
+
+  ws.send(JSON.stringify(payload));
 }
 
 function onEditorChangeHandler(
@@ -146,19 +157,23 @@ export default function socketCommunication(
   clientWS.binaryType = "arraybuffer";
 
   clientWS.onopen = () =>
-    initCursors(userId, cursorCollections, editorInstance);
+    initEditor(userId, cursorCollections, editorInstance, ydoc, clientWS);
 
   clientWS.onmessage = (messageEvent) => {
-    if (typeof messageEvent.data === "string" && messageEvent.data === "pong") {
-      console.log("Recevied pong");
-      return;
-    } else if (typeof messageEvent.data === "string") {
-      onPartnerCursorChangeHandler(
-        messageEvent,
-        editorInstance,
-        cursorCollections
-      );
-      return;
+    if (typeof messageEvent.data === "string") {
+      const payloadObject = JSON.parse(messageEvent.data);
+      if (payloadObject.type === "cursor") {
+        onPartnerCursorChangeHandler(
+          messageEvent,
+          editorInstance,
+          cursorCollections
+        );
+        return;
+      } else if (payloadObject.type === "sync") {
+        const yUpdate = Buffer.from(payloadObject.ydocUpdate, "base64");
+        Y.applyUpdate(ydoc, yUpdate, "remote");
+        return;
+      }
     }
     const yUpdate: Uint8Array = new Uint8Array(messageEvent.data);
     Y.applyUpdate(ydoc, yUpdate, "remote");
@@ -171,14 +186,6 @@ export default function socketCommunication(
   editorInstance.onDidChangeCursorSelection((event) =>
     onCursorChangeHandler(cursorCollections, event, clientWS, userId)
   );
-
-  const heartBeat = setInterval(() => {
-    if (clientWS.readyState === WebSocket.OPEN) {
-      clientWS.send("ping");
-    }
-  }, 30000);
-
-  clientWS.onclose = () => clearInterval(heartBeat);
 
   clientWS.onerror = (error) => {
     console.log(error);
