@@ -594,3 +594,36 @@ Request information on how to maintain socket connection and prevent timeout
 - Tested that connection is now persistent
 
 ---
+
+## Entry 17
+
+# Date/Time:
+
+2025-10-06 09:25
+
+# Tool:
+
+ChatGPT (model: GPT 5.0)
+
+# Prompt/Command:
+
+Request information on how to create custom cursors and send cursor information between users
+
+# Output Summary:
+
+- Provided the code outline on how to create a cursor decoration with CSS to be used with monaco editor and communicate
+  cursor information through sockets
+
+# Action Taken:
+
+- [ ] Accepted as-is
+- [x] Modified
+- [ ] Rejected
+
+# Author Notes:
+
+- Validated that CSS styling for cursor is appropriate, modified CSS styling to fit use case.
+- Researched on deltaDecorations suggested by model and decided that it was not appropriate as its a legacy api, searched online for more suitable modules and implemented cursor binding using IEditorDecorationsCollection instead.
+- Implemented communication logic using websockets myself, only using model for debugging.
+
+---
