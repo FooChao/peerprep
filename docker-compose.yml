@@ -131,12 +131,7 @@ services:
   redis-matching-service:
     image: redis:latest
     container_name: matching-redis
-    command:
-      [
-        "redis-server",
-        "--appendonly",
-        "yes",
-      ]
+    command: ["redis-server", "--appendonly", "yes"]
     env_file:
       - ./matching-service/.env
     volumes:

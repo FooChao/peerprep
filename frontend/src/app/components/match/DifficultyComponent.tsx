@@ -16,14 +16,16 @@ type DifficultyProps = {
   setDifficulty: React.Dispatch<React.SetStateAction<string[]>>;
 };
 
-export default function DifficultyComponent({ setDifficulty }: DifficultyProps) {
+export default function DifficultyComponent({
+  setDifficulty,
+}: DifficultyProps) {
   const [selectedDifficulty, setSelectedDifficulty] = useState<string[]>([]);
 
   const handleDifficultySelect = (difficulty: string) => {
     const newSelection = selectedDifficulty.includes(difficulty)
-      ? selectedDifficulty.filter(d => d !== difficulty)
+      ? selectedDifficulty.filter((d) => d !== difficulty)
       : [...selectedDifficulty, difficulty];
-    
+
     setSelectedDifficulty(newSelection);
     setDifficulty(newSelection);
   };
