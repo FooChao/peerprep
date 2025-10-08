@@ -4,7 +4,7 @@ export enum Topic {
   DATABASES = "Databases",
   ARRAYS = "Arrays",
   STRINGS = "Strings",
-  BRAINTEASER = "Brainteaser",
+  BRAINTEASER = "Brainteaser"
 }
 
 export const ALL_TOPICS = [
@@ -13,5 +13,5 @@ export const ALL_TOPICS = [
   Topic.DATABASES,
   Topic.ARRAYS,
   Topic.STRINGS,
-  Topic.BRAINTEASER,
+  Topic.BRAINTEASER
 ];

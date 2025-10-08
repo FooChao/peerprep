@@ -29,7 +29,10 @@ export async function findUserByUsername(username) {
 
 export async function findUserByUsernameOrEmail(username, email) {
   return UserModel.findOne({
-    $or: [{ username }, { email }],
+    $or: [
+      { username },
+      { email },
+    ],
   });
 }
 
@@ -47,7 +50,7 @@ export async function updateUserById(userId, username, email, password) {
         password,
       },
     },
-    { new: true }, // return the updated user
+    { new: true },  // return the updated user
   );
 }
 
@@ -59,7 +62,7 @@ export async function updateUserPrivilegeById(userId, isAdmin) {
         isAdmin,
       },
     },
-    { new: true }, // return the updated user
+    { new: true },  // return the updated user
   );
 }
 

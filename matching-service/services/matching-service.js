@@ -13,11 +13,11 @@ class MatchingService {
 
   // separate queue key per criteria combo (difficulty + topics)
   generateQueueKey(difficulty, topics) {
-    const sortedDifficulty = Array.isArray(difficulty)
-      ? difficulty.sort().join(",")
+    const sortedDifficulty = Array.isArray(difficulty) 
+      ? difficulty.sort().join(",") 
       : difficulty;
-    const sortedTopics = Array.isArray(topics)
-      ? topics.sort().join(",")
+    const sortedTopics = Array.isArray(topics) 
+      ? topics.sort().join(",") 
       : topics;
     return `${this.QUEUE_PREFIX}${sortedDifficulty}:${sortedTopics}`;
   }
@@ -27,27 +27,24 @@ class MatchingService {
     try {
       // check if user is already searching
       const existingSearch = await redisClient.get(
-        `${this.ACTIVE_SEARCH_PREFIX}${userId}`,
+        `${this.ACTIVE_SEARCH_PREFIX}${userId}`
       );
       if (existingSearch) {
         throw new Error("User is already in a matching queue");
       }
 
       const queueKey = this.generateQueueKey(difficulty, topics);
-
+      
       console.log(`[MATCHING] User ${userId} searching in queue: ${queueKey}`);
 
       // try to find a match immediately
-      const match = await this.findMatch(
-        { userId, username, difficulty, topics },
-        queueKey,
-      );
-
+      const match = await this.findMatch({ userId, username, difficulty, topics }, queueKey);
+      
       if (match) {
         return {
           matchFound: true,
           sessionId: match.sessionId,
-          matchData: match,
+          matchData: match
         };
       }
 
@@ -57,7 +54,7 @@ class MatchingService {
         username: username || userId,
         difficulty,
         topics,
-        joinedAt: Date.now(),
+        joinedAt: Date.now()
       };
 
       await redisClient.lPush(queueKey, JSON.stringify(userQueueData));
@@ -66,7 +63,7 @@ class MatchingService {
       await redisClient.setEx(
         `${this.ACTIVE_SEARCH_PREFIX}${userId}`,
         this.MATCH_TIMEOUT / 1000,
-        JSON.stringify({ queueKey, ...userQueueData }),
+        JSON.stringify({ queueKey, ...userQueueData })
       );
 
       // schedule auto-termination - deletes from queue after timeout
@@ -77,15 +74,16 @@ class MatchingService {
       return {
         matchFound: false,
         message: "Searching for a match...",
-        queueKey,
+        queueKey
       };
+
     } catch (error) {
       console.error("[MATCHING ERROR] enqueueUser:", error);
       throw error;
     }
   }
 
-  // find match in queue
+ // find match in queue
   async findMatch(newUser, queueKey) {
     try {
       const waitingUsers = await redisClient.lRange(queueKey, 0, -1);
@@ -98,13 +96,13 @@ class MatchingService {
         // same exact difficulty (can change to subsets in future iterations)
         const difficultyMatch = this.arraysEqual(
           waitingUser.difficulty,
-          newUser.difficulty,
+          newUser.difficulty
         );
 
         // same exact topics (can change to subsets in future iterations)
         const topicsMatch = this.arraysEqual(
           waitingUser.topics,
-          newUser.topics,
+          newUser.topics
         );
 
         if (difficultyMatch && topicsMatch) {
@@ -117,53 +115,49 @@ class MatchingService {
             sessionId,
             user1: {
               userId: waitingUser.userId,
-              username: waitingUser.username,
+              username: waitingUser.username
             },
             user2: {
               userId: newUser.userId,
-              username: newUser.username,
+              username: newUser.username
             },
             criteria: {
               difficulty: newUser.difficulty,
-              topics: newUser.topics,
+              topics: newUser.topics
             },
             matchedAt: new Date().toISOString(),
-            status: "active",
+            status: "active"
           };
 
           // store session (1 hour expiry - change in future iteration if necessary)
           await redisClient.setEx(
             `${this.SESSION_PREFIX}${sessionId}`,
             3600,
-            JSON.stringify(matchData),
+            JSON.stringify(matchData)
           );
 
           // map users to session
           await redisClient.setEx(
             `${this.USER_SESSION_PREFIX}${waitingUser.userId}`,
             3600,
-            sessionId,
+            sessionId
           );
           await redisClient.setEx(
             `${this.USER_SESSION_PREFIX}${newUser.userId}`,
             3600,
-            sessionId,
+            sessionId
           );
 
           // clean up active searches
-          await redisClient.del(
-            `${this.ACTIVE_SEARCH_PREFIX}${waitingUser.userId}`,
-          );
-          await redisClient.del(
-            `${this.ACTIVE_SEARCH_PREFIX}${newUser.userId}`,
-          );
+          await redisClient.del(`${this.ACTIVE_SEARCH_PREFIX}${waitingUser.userId}`);
+          await redisClient.del(`${this.ACTIVE_SEARCH_PREFIX}${newUser.userId}`);
 
           // cancel timeouts
           this.cancelTimeout(waitingUser.userId);
           this.cancelTimeout(newUser.userId);
 
           console.log(
-            `[MATCH FOUND] ${waitingUser.userId} ↔ ${newUser.userId} | Session: ${sessionId}`,
+            `[MATCH FOUND] ${waitingUser.userId} ↔ ${newUser.userId} | Session: ${sessionId}`
           );
 
           return matchData;
@@ -181,13 +175,11 @@ class MatchingService {
     const timeoutId = setTimeout(async () => {
       try {
         const activeSearch = await redisClient.get(
-          `${this.ACTIVE_SEARCH_PREFIX}${userId}`,
+          `${this.ACTIVE_SEARCH_PREFIX}${userId}`
         );
-
+        
         if (activeSearch) {
-          console.log(
-            `[TIMEOUT] Auto-terminating user ${userId} after 5 minutes`,
-          );
+          console.log(`[TIMEOUT] Auto-terminating user ${userId} after 5 minutes`);
           await this.terminateUser(userId);
         }
       } catch (error) {
@@ -212,7 +204,7 @@ class MatchingService {
   async terminateUser(userId) {
     try {
       const activeSearchData = await redisClient.get(
-        `${this.ACTIVE_SEARCH_PREFIX}${userId}`,
+        `${this.ACTIVE_SEARCH_PREFIX}${userId}`
       );
 
       if (!activeSearchData) {
@@ -228,7 +220,7 @@ class MatchingService {
         username: activeSearch.username,
         difficulty: activeSearch.difficulty,
         topics: activeSearch.topics,
-        joinedAt: activeSearch.joinedAt,
+        joinedAt: activeSearch.joinedAt
       });
 
       await redisClient.lRem(queueKey, 1, userQueueData);
@@ -240,8 +232,9 @@ class MatchingService {
 
       return {
         terminated: true,
-        message: "Matching terminated successfully",
+        message: "Matching terminated successfully"
       };
+
     } catch (error) {
       console.error("[TERMINATE ERROR]:", error);
       throw error;
@@ -251,19 +244,17 @@ class MatchingService {
   async checkStatus(userId) {
     try {
       // check if user has a session (matched)
-      const sessionId = await redisClient.get(
-        `${this.USER_SESSION_PREFIX}${userId}`,
-      );
+      const sessionId = await redisClient.get(`${this.USER_SESSION_PREFIX}${userId}`);
       if (sessionId) {
         return {
           status: "matched",
-          sessionId,
+          sessionId
         };
       }
 
       // check if user is searching
       const activeSearch = await redisClient.get(
-        `${this.ACTIVE_SEARCH_PREFIX}${userId}`,
+        `${this.ACTIVE_SEARCH_PREFIX}${userId}`
       );
 
       if (activeSearch) {
@@ -277,14 +268,15 @@ class MatchingService {
           remainingTime,
           criteria: {
             difficulty: searchData.difficulty,
-            topics: searchData.topics,
-          },
+            topics: searchData.topics
+          }
         };
       }
 
       return {
-        status: "idle",
+        status: "idle"
       };
+
     } catch (error) {
       console.error("[STATUS ERROR]:", error);
       throw error;
@@ -293,9 +285,7 @@ class MatchingService {
 
   async getSession(sessionId) {
     try {
-      const sessionData = await redisClient.get(
-        `${this.SESSION_PREFIX}${sessionId}`,
-      );
+      const sessionData = await redisClient.get(`${this.SESSION_PREFIX}${sessionId}`);
       return sessionData ? JSON.parse(sessionData) : null;
     } catch (error) {
       console.error("[GET SESSION ERROR]:", error);
@@ -305,35 +295,28 @@ class MatchingService {
 
   async endSession(userId) {
     try {
-      const sessionId = await redisClient.get(
-        `${this.USER_SESSION_PREFIX}${userId}`,
-      );
+      const sessionId = await redisClient.get(`${this.USER_SESSION_PREFIX}${userId}`);
 
       if (!sessionId) {
         return { ended: false, message: "No active session found" };
       }
 
-      const sessionData = await redisClient.get(
-        `${this.SESSION_PREFIX}${sessionId}`,
-      );
+      const sessionData = await redisClient.get(`${this.SESSION_PREFIX}${sessionId}`);
       if (sessionData) {
         const session = JSON.parse(sessionData);
 
         await redisClient.del(`${this.SESSION_PREFIX}${sessionId}`);
-        await redisClient.del(
-          `${this.USER_SESSION_PREFIX}${session.user1.userId}`,
-        );
-        await redisClient.del(
-          `${this.USER_SESSION_PREFIX}${session.user2.userId}`,
-        );
+        await redisClient.del(`${this.USER_SESSION_PREFIX}${session.user1.userId}`);
+        await redisClient.del(`${this.USER_SESSION_PREFIX}${session.user2.userId}`);
 
         console.log(`[SESSION ENDED] ${sessionId} - Both users removed`);
       }
 
       return {
         ended: true,
-        message: "Session ended successfully",
+        message: "Session ended successfully"
       };
+
     } catch (error) {
       console.error("[END SESSION ERROR]:", error);
       throw error;

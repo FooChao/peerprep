@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Difficulty } from "@/types/difficulty";
 
 export default function QuestionComponent() {
+
   return (
     <Card className="h-full flex flex-col bg-stone-900 border-black">
       {/* Criteria */}

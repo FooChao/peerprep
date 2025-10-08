@@ -18,13 +18,14 @@ interface SearchComponentProps {
   isSearching: boolean;
 }
 
-export default function SearchComponent({
-  onSearch,
-  isMatched,
+export default function SearchComponent({ 
+  onSearch, 
+  isMatched, 
   onCancel,
   timeRemaining,
-  isSearching,
+  isSearching 
 }: SearchComponentProps) {
+  
   const formatTimeRemaining = (seconds: number | null) => {
     if (seconds === null) return "5:00";
     const mins = Math.floor(seconds / 60);
@@ -35,8 +36,8 @@ export default function SearchComponent({
   return (
     <Dialog open={isSearching} onOpenChange={(open) => !open && onCancel()}>
       <DialogTrigger asChild>
-        <Button
-          className="mb-15 w-[80%] bg-black text-white"
+        <Button 
+          className="mb-15 w-[80%] bg-black text-white" 
           variant="outline"
           onClick={onSearch}
           disabled={isMatched || isSearching}
@@ -49,22 +50,22 @@ export default function SearchComponent({
           <DialogTitle>Searching for a match...</DialogTitle>
           <DialogDescription>Hold on tight!</DialogDescription>
         </DialogHeader>
-
+        
         <Spinner variant="circle-filled" />
-
+        
         {/* Countdown Timer */}
         <div className="w-full mt-4 text-center">
           <p className="text-2xl font-bold text-gray-800">
             {formatTimeRemaining(timeRemaining)}
           </p>
           <p className="text-sm text-gray-500 mt-1">Time remaining</p>
-
+          
           {/* Progress Bar */}
           <div className="w-full mt-4 bg-gray-200 rounded-full h-3">
-            <div
+            <div 
               className="bg-blue-600 h-3 rounded-full transition-all duration-1000"
-              style={{
-                width: `${timeRemaining ? (timeRemaining / 300) * 100 : 100}%`,
+              style={{ 
+                width: `${timeRemaining ? (timeRemaining / 300) * 100 : 100}%` 
               }}
             ></div>
           </div>

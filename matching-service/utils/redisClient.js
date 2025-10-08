@@ -13,8 +13,8 @@ const client = redis.createClient({
       console.log(`[REDIS] Reconnecting in ${delay}ms... (attempt ${retries})`);
       return delay;
     },
-    connectTimeout: 10000,
-  },
+    connectTimeout: 10000
+  }
 });
 
 client.on("error", (err) => console.error("[REDIS ERROR]", err));
