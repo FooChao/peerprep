@@ -21,9 +21,9 @@ export default function TopicsComponent({ setTopics }: TopicsProps) {
 
   const handleTopicSelect = (topic: string) => {
     const newSelection = selectedTopics.includes(topic)
-      ? selectedTopics.filter(t => t !== topic)
+      ? selectedTopics.filter((t) => t !== topic)
       : [...selectedTopics, topic];
-    
+
     setSelectedTopics(newSelection);
     setTopics(newSelection);
   };
