@@ -733,7 +733,6 @@ Request to create comprehensive email utility functions for sending verification
 - Implemented proper error handling and parameter validation
 - Added support for different environments (development/production) with appropriate base URLs
 - Asked for output summary
-  > > > > > > > master
 
 # Action Taken:
 
