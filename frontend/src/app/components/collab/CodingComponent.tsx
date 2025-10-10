@@ -50,7 +50,7 @@ export default function CodingComponent() {
     const binding: MonacoBinding = new MonacoBinding(
       yText,
       editorInstance.getModel()!,
-      new Set([editorInstance])
+      new Set([editorInstance]),
     );
 
     const cursorCollections: Record<
@@ -65,13 +65,13 @@ export default function CodingComponent() {
       cursorCollections,
       () => {
         router.replace("/match");
-      }
+      },
     );
     registerCursorUpdateHandler(
       user_id,
       editorInstance,
       cursorCollections,
-      clientWS
+      clientWS,
     );
     registerEditorUpdateHandler(ydoc, clientWS);
 
