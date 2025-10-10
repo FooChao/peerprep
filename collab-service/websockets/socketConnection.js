@@ -16,6 +16,7 @@ import {
   parseCursorUpdate,
   handleInitialDocSync,
   broadcastToRoom,
+  handleSocketDisconnection,
 } from "./socketEventHandlers.js";
 
 //Initialises backend socket events
@@ -52,8 +53,8 @@ function initialiseWebSocket(wss, ws, request, roomToDocMap) {
     broadcastToRoom(wss, ws, roomId, yUpdate);
   });
 
-  ws.on("close", function () {
-    // roomToDocMap.delete(roomId);
+  ws.on("close", () => {
+    handleSocketDisconnection(ws, wss);
   });
 }
 export { initialiseWebSocket };

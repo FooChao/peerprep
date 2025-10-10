@@ -1,5 +1,6 @@
 import WebSocket from "ws";
 import * as Y from "yjs";
+import logger from "../utils/logger.js";
 
 function getYDoc(roomToDocMap, userId, roomId) {
   let doc;
@@ -46,7 +47,17 @@ function handleInitialDocSync(message, ws, ydoc) {
   return false;
 }
 
+//Handles client disconnection and inform partner of disconnection
+function handleSocketDisconnection(ws, wss) {
+  const payload = {
+    type: "disconnect",
+    disconnectedUserId: ws.userId,
+  };
+  broadcastToRoom(wss, ws, ws.room, JSON.stringify(payload));
+}
+
 //Communicate update to other websockets with same roomId
+//O(N) time complexity -> think about using hashmap to store sessionId:[socket1, socket2]
 function broadcastToRoom(webSocketServer, websocket, roomId, update) {
   webSocketServer.clients.forEach((client) => {
     if (
@@ -59,4 +70,10 @@ function broadcastToRoom(webSocketServer, websocket, roomId, update) {
   });
 }
 
-export { getYDoc, parseCursorUpdate, handleInitialDocSync, broadcastToRoom };
+export {
+  getYDoc,
+  parseCursorUpdate,
+  handleInitialDocSync,
+  broadcastToRoom,
+  handleSocketDisconnection,
+};

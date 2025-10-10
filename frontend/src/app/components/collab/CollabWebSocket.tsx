@@ -87,6 +87,12 @@ function initialiseCollabWebsocket(
         );
         Y.applyUpdate(ydoc, yUpdate, "remote");
         return;
+      } else if (payloadObject.type === "disconnect") {
+        const disconnectedUser: string = payloadObject.disconnectedUserId;
+        const cursorDecorator: monaco.editor.IEditorDecorationsCollection =
+          cursorCollections[disconnectedUser];
+        cursorDecorator.clear();
+        delete cursorCollections[disconnectedUser];
       }
       //bufferArray Type
     } else {
@@ -99,7 +105,7 @@ function initialiseCollabWebsocket(
     console.log(error);
   };
 
-  clientWS.onclose = (closeEvent) => {
+  clientWS.onclose = () => {
     delete cursorCollections[userId];
   };
   return clientWS;
