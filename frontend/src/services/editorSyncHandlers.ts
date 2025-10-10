@@ -27,7 +27,7 @@ interface editorSyncPayload extends BasePayload {
 function initEditor(
   userId: string,
   cursorCollections: Record<string, monaco.editor.IEditorDecorationsCollection>,
-  editorInstance: monaco.editor.IStandaloneCodeEditor
+  editorInstance: monaco.editor.IStandaloneCodeEditor,
 ) {
   console.log("Connected to server Websocket Succesfully");
   cursorCollections[userId] = editorInstance.createDecorationsCollection([]);
@@ -61,7 +61,7 @@ function sendEditorState(userId: string, ydoc: Y.Doc, ws: WebSocket) {
 function onEditorChangeHandler(
   update: Uint8Array,
   origin: string,
-  clientWS: WebSocket
+  clientWS: WebSocket,
 ) {
   if (origin != "remote" && clientWS.readyState === WebSocket.OPEN) {
     clientWS.send(update);
@@ -73,7 +73,7 @@ function onCursorChangeHandler(
   cursorCollections: Record<string, monaco.editor.IEditorDecorationsCollection>,
   event: monaco.editor.ICursorSelectionChangedEvent,
   clientWS: WebSocket,
-  userId: string
+  userId: string,
 ) {
   const { startLineNumber, startColumn, endLineNumber, endColumn } =
     event.selection;
@@ -96,7 +96,7 @@ function onCursorChangeHandler(
         startLineNumber,
         startColumn,
         endLineNumber,
-        endColumn
+        endColumn,
       ),
       options: {
         className: "local-cursor",
@@ -110,7 +110,7 @@ function onCursorChangeHandler(
 function onPartnerCursorChangeHandler(
   messageEvent: MessageEvent,
   editorInstance: monaco.editor.IStandaloneCodeEditor,
-  cursorCollections: Record<string, monaco.editor.IEditorDecorationsCollection>
+  cursorCollections: Record<string, monaco.editor.IEditorDecorationsCollection>,
 ) {
   const data: CursorUpdatePayload = JSON.parse(messageEvent.data);
 
@@ -127,7 +127,7 @@ function onPartnerCursorChangeHandler(
           startLineNumber,
           startColumn,
           endLineNumber,
-          endColumn
+          endColumn,
         ),
         options: {
           className: "remote-cursor",
