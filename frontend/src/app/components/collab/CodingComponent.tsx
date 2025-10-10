@@ -14,7 +14,11 @@ import {
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { ChevronDown, CircleUser } from "lucide-react";
-import socketCommunication from "./SocketConnection";
+import {
+  initialiseCollabWebsocket,
+  registerCursorUpdateHandler,
+  registerEditorUpdateHandler,
+} from "./CollabWebSocket";
 import { useUser } from "@/contexts/UserContext";
 
 export default function CodingComponent() {
@@ -46,14 +50,28 @@ export default function CodingComponent() {
     const binding: MonacoBinding = new MonacoBinding(
       yText,
       editorInstance.getModel()!,
-      new Set([editorInstance]),
+      new Set([editorInstance])
     );
-    const clientWS: WebSocket = socketCommunication(
+
+    const cursorCollections: Record<
+      string,
+      monaco.editor.IEditorDecorationsCollection
+    > = {};
+    const clientWS: WebSocket = initialiseCollabWebsocket(
       user_id,
       session_id,
       ydoc,
       editorInstance,
+      cursorCollections
     );
+    registerCursorUpdateHandler(
+      user_id,
+      editorInstance,
+      cursorCollections,
+      clientWS
+    );
+    registerEditorUpdateHandler(ydoc, clientWS);
+
     return () => {
       console.log("remove client websocket, binding and ydoc");
       clientWS.close();

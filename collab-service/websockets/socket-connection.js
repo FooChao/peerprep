@@ -109,7 +109,7 @@ function handleSocketConnection(wss, ws, request, roomToDocMap) {
   });
 
   ws.on("close", function () {
-    roomToDocMap.delete(userId);
+    roomToDocMap.delete(roomId);
   });
 }
 export { handleSocketConnection };
