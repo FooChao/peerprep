@@ -112,7 +112,7 @@ function onPartnerCursorChangeHandler(
   editorInstance: monaco.editor.IStandaloneCodeEditor,
   cursorCollections: Record<string, monaco.editor.IEditorDecorationsCollection>
 ) {
-  const data = JSON.parse(messageEvent.data);
+  const data: CursorUpdatePayload = JSON.parse(messageEvent.data);
 
   if (data.type === "cursor") {
     if (!cursorCollections[data.userId]) {

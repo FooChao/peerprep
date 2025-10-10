@@ -49,7 +49,7 @@ function registerCursorUpdateHandler(
   );
 }
 
-//Initilises browser Websocket events
+//Initialises browser Websocket events
 function initialiseCollabWebsocket(
   userId: string,
   sessionId: string,
