@@ -48,17 +48,46 @@ function handleInitialDocSync(message, ws, ydoc) {
 }
 
 //Handles client disconnection and inform partner of disconnection
-function handleSocketDisconnection(ws, wss) {
-  const payload = {
+function handleSocketDisconnection(ws, wss, roomToDocMap) {
+  const payloadToPartner = {
     type: "disconnect",
     disconnectedUserId: ws.userId,
   };
-  broadcastToRoom(wss, ws, ws.room, JSON.stringify(payload));
+
+  const payloadToSelf = {
+    type: "end",
+    disconnectedUserId: ws.userId,
+  };
+  const hasUser = broadcastToRoom(
+    wss,
+    ws,
+    ws.room,
+    JSON.stringify(payloadToPartner)
+  ); //To remove dangling cursor on partner's editor
+  broadcastToCurrentUser(wss, ws, JSON.stringify(payloadToSelf)); //for disconnected user to return back to matching page on all opened tabs
+
+  if (!hasUser) {
+    roomToDocMap.delete(ws.room);
+  }
+}
+
+//Handle disconnection for remaining open tabs of one user
+function broadcastToCurrentUser(webSocketServer, websocket, update) {
+  webSocketServer.clients.forEach((client) => {
+    if (
+      client !== websocket &&
+      client.readyState === WebSocket.OPEN &&
+      client.userId === websocket.userId
+    ) {
+      client.send(update);
+    }
+  });
 }
 
 //Communicate update to other websockets with same roomId
 //O(N) time complexity -> think about using hashmap to store sessionId:[socket1, socket2]
 function broadcastToRoom(webSocketServer, websocket, roomId, update) {
+  let hasUserInRoom = false;
   webSocketServer.clients.forEach((client) => {
     if (
       client !== websocket &&
@@ -66,8 +95,10 @@ function broadcastToRoom(webSocketServer, websocket, roomId, update) {
       client.room === roomId
     ) {
       client.send(update);
+      hasUserInRoom = true;
     }
   });
+  return hasUserInRoom;
 }
 
 export {

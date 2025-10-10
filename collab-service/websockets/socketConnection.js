@@ -54,7 +54,7 @@ function initialiseWebSocket(wss, ws, request, roomToDocMap) {
   });
 
   ws.on("close", () => {
-    handleSocketDisconnection(ws, wss);
+    handleSocketDisconnection(ws, wss, roomToDocMap);
   });
 }
 export { initialiseWebSocket };

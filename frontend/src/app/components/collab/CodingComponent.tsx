@@ -20,11 +20,11 @@ import {
   registerEditorUpdateHandler,
 } from "./CollabWebSocket";
 import { useUser } from "@/contexts/UserContext";
-
+import { useRouter } from "next/navigation";
 export default function CodingComponent() {
   const [codeContent, setCodeContent] = useState<string>("");
   const [selectedLanguage, setSeletedLanguage] = useState<string>("JavaScript");
-
+  const router = useRouter();
   const [editorInstance, setEditorInstance] =
     useState<monaco.editor.IStandaloneCodeEditor>();
   const { user } = useUser();
@@ -50,7 +50,7 @@ export default function CodingComponent() {
     const binding: MonacoBinding = new MonacoBinding(
       yText,
       editorInstance.getModel()!,
-      new Set([editorInstance]),
+      new Set([editorInstance])
     );
 
     const cursorCollections: Record<
@@ -63,12 +63,15 @@ export default function CodingComponent() {
       ydoc,
       editorInstance,
       cursorCollections,
+      () => {
+        router.replace("/match");
+      }
     );
     registerCursorUpdateHandler(
       user_id,
       editorInstance,
       cursorCollections,
-      clientWS,
+      clientWS
     );
     registerEditorUpdateHandler(ydoc, clientWS);
 
