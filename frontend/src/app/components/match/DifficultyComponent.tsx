@@ -41,12 +41,12 @@ export default function DifficultyComponent({
           </CardDescription>
         </CardHeader>
       </div>
-      <CardContent className="flex justify-evenly h-full items-center gap-3">
+      <CardContent className="flex flex-wrap justify-evenly h-full items-center gap-3">
         <Button
           onClick={() => handleDifficultySelect(Difficulty.EASY)}
-          className={`flex-1 h-[50%] min-w-[150px] relative bg-green-200 text-black hover:bg-green-200/90 flex items-center justify-center`}
+          className={`flex-1 h-[50px] min-w-[150px] relative bg-green-200 text-black hover:bg-green-200/90 flex items-center justify-center`}
         >
-          <span className="absolute left-1/2 -translate-x-1/2">{Difficulty.EASY}</span>
+          <span className="absolute left-1/2 -translate-x-1/2 max-w-[calc(100%-64px)] truncate">{Difficulty.EASY}</span>
           <IoCheckmark
             className={`absolute right-3 top-1/2 -translate-y-1/2 text-green-800 text-3xl flex-shrink-0 ${
               selectedDifficulty.includes(Difficulty.EASY)
@@ -57,9 +57,9 @@ export default function DifficultyComponent({
         </Button>
         <Button
           onClick={() => handleDifficultySelect(Difficulty.MEDIUM)}
-          className={`flex-1 h-[50%] min-w-[150px] relative bg-yellow-200 text-black hover:bg-yellow-200/90 flex items-center justify-center`}
+          className={`flex-1 h-[50px] min-w-[150px] relative bg-yellow-200 text-black hover:bg-yellow-200/90 flex items-center justify-center`}
         >
-          <span className="absolute left-1/2 -translate-x-1/2">{Difficulty.MEDIUM}</span>
+          <span className="absolute left-1/2 -translate-x-1/2 max-w-[calc(100%-64px)] truncate">{Difficulty.MEDIUM}</span>
           <IoCheckmark
             className={`absolute right-3 top-1/2 -translate-y-1/2 text-yellow-800 text-3xl flex-shrink-0 ${
               selectedDifficulty.includes(Difficulty.MEDIUM)
@@ -70,9 +70,9 @@ export default function DifficultyComponent({
         </Button>
         <Button
           onClick={() => handleDifficultySelect(Difficulty.HARD)}
-          className={`flex-1 h-[50%] min-w-[150px] relative bg-red-200 text-black hover:bg-red-200/90 flex items-center justify-center`}
+          className={`flex-1 h-[50px] min-w-[150px] relative bg-red-200 text-black hover:bg-red-200/90 flex items-center justify-center`}
         >
-          <span className="absolute left-1/2 -translate-x-1/2">{Difficulty.HARD}</span>
+          <span className="absolute left-1/2 -translate-x-1/2 max-w-[calc(100%-64px)] truncate">{Difficulty.HARD}</span>
           <IoCheckmark
             className={`absolute right-3 top-1/2 -translate-y-1/2 text-red-800 text-3xl flex-shrink-0 ${
               selectedDifficulty.includes(Difficulty.HARD)
