@@ -44,12 +44,14 @@ export default function TopicsComponent({ setTopics }: TopicsProps) {
           <Button
             key={topic}
             onClick={() => handleTopicSelect(topic)}
-            className={`flex-1 min-w-[30%] h-[50px] relative bg-blue-200 text-black hover:bg-blue-200/90`}
+            className={`flex-1 min-w-[30%] h-[50px] relative bg-blue-200 text-black hover:bg-blue-200/90 pr-12`}
           >
             {topic}
-            {selectedTopics.includes(topic) && (
-              <IoCheckmark className="absolute right-3 top-1/2 -translate-y-1/2 text-blue-800 text-xl" />
-            )}
+            <IoCheckmark
+              className={`absolute right-3 top-1/2 -translate-y-1/2 text-blue-800 text-3xl ${
+                selectedTopics.includes(topic) ? "opacity-100" : "opacity-0"
+              }`}
+            />
           </Button>
         ))}
       </CardContent>

@@ -39,7 +39,7 @@ export default function MatchPage() {
 
   return (
     <div className="h-screen flex flex-col items-center justify-center px-4">
-      <div className="text-center mb-8">
+      <div className="text-center mb-8 mt-16">
         <h1 className="text-5xl font-bold mb-4">Find your coding partner</h1>
         <p className="text-lg text-gray-600">
           Set your preferences and we will find the best match for you!

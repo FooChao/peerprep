@@ -44,30 +44,42 @@ export default function DifficultyComponent({
       <CardContent className="flex justify-evenly h-full items-center gap-3">
         <Button
           onClick={() => handleDifficultySelect(Difficulty.EASY)}
-          className={`flex-1 h-[50%] relative bg-green-200 text-black hover:bg-green-200/90`}
+          className={`flex-1 h-[50%] relative bg-green-200 text-black hover:bg-green-200/90 pr-12`}
         >
           {Difficulty.EASY}
-          {selectedDifficulty.includes(Difficulty.EASY) && (
-            <IoCheckmark className="absolute right-3 top-1/2 -translate-y-1/2 text-green-800 text-xl" />
-          )}
+          <IoCheckmark
+            className={`absolute right-3 top-1/2 -translate-y-1/2 text-green-800 text-3xl ${
+              selectedDifficulty.includes(Difficulty.EASY)
+                ? "opacity-100"
+                : "opacity-0"
+            }`}
+          />
         </Button>
         <Button
           onClick={() => handleDifficultySelect(Difficulty.MEDIUM)}
-          className={`flex-1 h-[50%] relative bg-yellow-200 text-black hover:bg-yellow-200/90`}
+          className={`flex-1 h-[50%] relative bg-yellow-200 text-black hover:bg-yellow-200/90 pr-12`}
         >
           {Difficulty.MEDIUM}
-          {selectedDifficulty.includes(Difficulty.MEDIUM) && (
-            <IoCheckmark className="absolute right-3 top-1/2 -translate-y-1/2 text-yellow-800 text-xl" />
-          )}
+          <IoCheckmark
+            className={`absolute right-3 top-1/2 -translate-y-1/2 text-yellow-800 text-3xl ${
+              selectedDifficulty.includes(Difficulty.MEDIUM)
+                ? "opacity-100"
+                : "opacity-0"
+            }`}
+          />
         </Button>
         <Button
           onClick={() => handleDifficultySelect(Difficulty.HARD)}
-          className={`flex-1 h-[50%] relative bg-red-200 text-black hover:bg-red-200/90`}
+          className={`flex-1 h-[50%] relative bg-red-200 text-black hover:bg-red-200/90 pr-12`}
         >
           {Difficulty.HARD}
-          {selectedDifficulty.includes(Difficulty.HARD) && (
-            <IoCheckmark className="absolute right-3 top-1/2 -translate-y-1/2 text-red-800 text-xl" />
-          )}
+          <IoCheckmark
+            className={`absolute right-3 top-1/2 -translate-y-1/2 text-red-800 text-3xl ${
+              selectedDifficulty.includes(Difficulty.HARD)
+                ? "opacity-100"
+                : "opacity-0"
+            }`}
+          />
         </Button>
       </CardContent>
     </Card>
