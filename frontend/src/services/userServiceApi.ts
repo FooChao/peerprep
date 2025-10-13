@@ -119,6 +119,8 @@ const verifyToken = async (token: string) => {
  * @returns Response containing access token and user data
  */
 const login = async (email: string, password: string) => {
+  console.log("url", process.env.API_GATEWAY_BASE_URL)
+  console.log("baseurl", getBaseURL())
   try {
     const apiClient = createApiClient();
     const response = await apiClient.post(
