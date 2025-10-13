@@ -3,6 +3,5 @@ FROM nginx:latest
 COPY default.conf /etc/nginx/templates/default.conf.template
 
 # Expose Cloud Run port (default 8080, overridden to 80 in local docker-compose)
-ENV PORT 8080
-EXPOSE 8080
+EXPOSE ${PORT}
 CMD ["nginx", "-g", "daemon off;"]
