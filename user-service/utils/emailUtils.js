@@ -1,10 +1,3 @@
-/**
- * AI Assistance Disclosure:
- * Tool: ChatGPT (model: ChatGPT 5 thinking), date: 2025-09-24
- * Purpose: To create email utility functions for sending verification emails using Nodemailer with SMTP configuration and verification link generation.
- * Author Review: I validated correctness, security, and performance of the code.
- */
-
 // lib/mailer.js
 // ESM version (Next.js / "type": "module")
 // ------------------------------------------------------------
@@ -15,6 +8,9 @@
 // ------------------------------------------------------------
 
 import nodemailer from "nodemailer";
+import config from "../../config/config.json";
+
+const FRONTEND_BASE_URL = config.FRONTEND_BASE_URL || "http://localhost:3000";
 
 /**
  * Small helper: parse boolean envs like "true"/"false"
@@ -59,23 +55,13 @@ export function makeTransport() {
  * Example frontend handler: /auth/verify?email=...&token=...
  */
 export function makeVerificationLink(email, username, rawToken) {
-  // TODO: Update base URL logic if deploying to a real production domain
-  let base;
-  if (process.env.NODE_ENV === "production") {
-    base = "http://localhost";
-  } else {
-    base = "http://localhost:3000";
-  }
-  
+  let base = FRONTEND_BASE_URL;
   const params = new URLSearchParams({
     email: email,
     username: username,
     token: rawToken,
   });
-  
-  const fullUrl = `${base}/auth/verify?${params.toString()}`;
-  
-  return fullUrl;
+  return `${base}/auth/verify?${params.toString()}`;
 }
 
 /**
