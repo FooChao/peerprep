@@ -1,7 +1,6 @@
 import axios from "axios";
-import config from "../../../config/config.json" assert { type: "json" };
 
-const API_GATEWAY_BASE_URL : string = config.API_GATEWAY_BASE_URL || "http://localhost";
+const API_GATEWAY_BASE_URL : string = process.env.API_GATEWAY_BASE_URL || "http://localhost";
 
 export interface MatchRequest {
   userId: string;
@@ -44,14 +43,17 @@ export interface TerminateResponse {
   message: string;
 }
 
-/**
- * Single Reusable Axios Client
- */
-const apiClient = axios.create({
-  baseURL: `${API_GATEWAY_BASE_URL}/api`,
-  headers: { "Content-Type": "application/json" },
-  timeout: 10000,
-});
+const getBaseURL = () => {
+  return `${API_GATEWAY_BASE_URL}/api`
+};
+
+const createApiClient = () =>
+  axios.create({
+    baseURL: getBaseURL(),
+    headers: { "Content-Type": "application/json" },
+    timeout: 10000,
+  });
+
 
 const API_ENDPOINTS = {
   MATCH: "/matching/match",
@@ -68,6 +70,7 @@ export const startMatch = async (
   request: MatchRequest,
 ): Promise<MatchResponse> => {
   try {
+    const apiClient = createApiClient();
     const response = await apiClient.post<MatchResponse>(
       API_ENDPOINTS.MATCH,
       request,
@@ -86,6 +89,7 @@ export const getMatchStatus = async (
   userId: string,
 ): Promise<MatchStatusResponse> => {
   try {
+    const apiClient = createApiClient();
     const response = await apiClient.get<MatchStatusResponse>(
       `${API_ENDPOINTS.STATUS}/${userId}`,
     );
@@ -103,6 +107,7 @@ export const terminateMatch = async (
   userId: string,
 ): Promise<TerminateResponse> => {
   try {
+    const apiClient = createApiClient();
     const response = await apiClient.delete<TerminateResponse>(
       `${API_ENDPOINTS.TERMINATE}/${userId}`,
     );
@@ -118,6 +123,7 @@ export const terminateMatch = async (
  */
 export const getSession = async (sessionId: string) => {
   try {
+    const apiClient = createApiClient();
     const response = await apiClient.get(
       `${API_ENDPOINTS.SESSION}/${sessionId}`,
     );
@@ -133,6 +139,7 @@ export const getSession = async (sessionId: string) => {
  */
 export const endSession = async (userId: string) => {
   try {
+    const apiClient = createApiClient();
     const response = await apiClient.delete(
       `${API_ENDPOINTS.SESSION}/${userId}`,
     );
@@ -148,6 +155,7 @@ export const endSession = async (userId: string) => {
  */
 // export const getQueueStats = async () => {
 //   try {
+//     const apiClient = createApiClient();
 //     const response = await apiClient.get(API_ENDPOINTS.STATS);
 //     return response.data;
 //   } catch (error) {

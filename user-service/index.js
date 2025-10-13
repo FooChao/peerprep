@@ -7,7 +7,6 @@
 
 import express from "express";
 import cors from "cors";
-import config from "../config/config.json" assert { type: "json" };
 
 import userRoutes from "./routes/user-routes.js";
 import authRoutes from "./routes/auth-routes.js";
@@ -22,8 +21,8 @@ const corsOptions = {
   origin: (origin, callback) => {
     // Build allowed origins from config
     const allowedOrigins = [
-      config.FRONTEND_BASE_URL || "http://localhost:3000",
-      config.API_GATEWAY_BASE_URL || "http://localhost"
+      process.env.FRONTEND_BASE_URL || "http://localhost:3000",
+      process.env.API_GATEWAY_BASE_URL || "http://localhost"
     ];
     
     // Allow requests with no origin (like mobile apps or curl requests) or from whitelisted origins

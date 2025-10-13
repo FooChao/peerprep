@@ -8,9 +8,8 @@
 // ------------------------------------------------------------
 
 import nodemailer from "nodemailer";
-import config from "../../config/config.json";
 
-const FRONTEND_BASE_URL = config.FRONTEND_BASE_URL || "http://localhost:3000";
+const FRONTEND_BASE_URL = process.env.FRONTEND_BASE_URL || "http://localhost:3000";
 
 /**
  * Small helper: parse boolean envs like "true"/"false"

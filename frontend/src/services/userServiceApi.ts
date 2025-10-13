@@ -3,14 +3,16 @@
  * Tool: GitHub Copilot (model: Claude Sonnet 4), date: 2025-09-16
  * Purpose: To fix Docker networking bug where middleware (server-side) and browser (client-side) need different API endpoints for same service.
  * Author Review: I validated correctness, security, and performance of the dynamic client creation approach.
- * Other Notes: This file was previously edited on 2025-10-13 to refactor API client to use a single reusable instance now that frontend is separated from API gateway.
  */
 
 // API Configuration for PeerPrep Frontend
 import axios from "axios";
-import config from "../../../config/config.json" assert { type: "json" };
 
-const API_GATEWAY_BASE_URL : string = config.API_GATEWAY_BASE_URL || "http://localhost";
+const API_GATEWAY_BASE_URL : string = process.env.API_GATEWAY_BASE_URL || "http://localhost";
+// note that for actual deployment to cloud, we will set it to same as API Gateway URL
+// this is only for local dev with docker-compose
+// because for some weird reason it doesn't work with localhost in middleware
+const USER_SERVICE_URL : string = process.env.USER_SERVICE_URL || "http://user-service:4000";
 
 // TypeScript interfaces for API responses
 export interface User {
@@ -27,19 +29,56 @@ export interface ApiResponse<T = unknown> {
 }
 
 /**
- * Single Reusable Axios Client
+ * Dynamic Base URL Detection
  *
- * Now that the frontend is separated from the API gateway, we can use a single,
- * reusable axios instance. The frontend always communicates with the API gateway
- * at the same URL regardless of execution context (server-side vs client-side).
+ * This function determines the correct API endpoint based on execution context:
+ * - Server-side (middleware): Direct container-to-container communication
+ * - Client-side (browser): Through API Gateway proxy
+ *
+ * This fixes a Docker networking bug where the same code runs in different environments
+ * and needs different URLs to reach the same service.
  */
-const apiClient = axios.create({
-  baseURL: `${API_GATEWAY_BASE_URL}/api`,
-  headers: {
-    "Content-Type": "application/json",
-  },
-  timeout: 10000, // 10 seconds timeout
-});
+const getBaseURL = () => {
+  // Check if we're running server-side (middleware) or client-side (browser)
+  const isServerSide = typeof window === "undefined";
+
+  if (process.env.NODE_ENV === "production") {
+    if (isServerSide) {
+      // Server-side: Direct call to user-service container
+      // This bypasses the API gateway for internal Docker networking
+      return `${USER_SERVICE_URL}`;
+    } else {
+      // Client-side: Through API Gateway
+      // Browser requests go through the nginx proxy on localhost
+      return `${API_GATEWAY_BASE_URL}/api`;
+    }
+  } else {
+    // Development: Direct to user-service (no Docker containers)
+    return "http://localhost:4000";
+  }
+};
+
+/**
+ * Dynamic Axios Client Creation
+ * We create a new axios instance for each request instead of using a module-level singleton.
+ * This is necessary because:
+ *
+ * 1. The same module code runs in both server-side (middleware) and client-side (browser) contexts
+ * 2. Each context needs a different base URL to reach the user service
+ * 3. A singleton axios instance would "freeze" the URL from the first context that loads it
+ * 4. Dynamic creation ensures getBaseURL() runs fresh for each request context
+ *
+ * This fixes the Docker networking bug where middleware couldn't reach the user service.
+ */
+const createApiClient = () => {
+  return axios.create({
+    baseURL: getBaseURL(), // Fresh URL calculation for current execution context
+    headers: {
+      "Content-Type": "application/json",
+    },
+    timeout: 10000, // 10 seconds timeout
+  });
+};
 
 // API Endpoints
 const API_ENDPOINTS = {
@@ -57,6 +96,7 @@ const API_ENDPOINTS = {
  */
 const verifyToken = async (token: string) => {
   try {
+    const apiClient = createApiClient();
     const response = await apiClient.get(
       `${API_ENDPOINTS.AUTH_SERVICE}/verify-token`,
       {
@@ -80,6 +120,7 @@ const verifyToken = async (token: string) => {
  */
 const login = async (email: string, password: string) => {
   try {
+    const apiClient = createApiClient();
     const response = await apiClient.post(
       `${API_ENDPOINTS.AUTH_SERVICE}/login`,
       {
@@ -103,6 +144,7 @@ const login = async (email: string, password: string) => {
  */
 const signup = async (username: string, email: string, password: string) => {
   try {
+    const apiClient = createApiClient();
     const response = await apiClient.post(`${API_ENDPOINTS.USER_SERVICE}/`, {
       username,
       email,
@@ -121,6 +163,7 @@ const verifyUserEmail = async (
   email: string,
 ) => {
   try {
+    const apiClient = createApiClient();
     const response = await apiClient.get(
       `${API_ENDPOINTS.VERIFICATION_SERVICE}/verify?token=${encodeURIComponent(token)}&username=${encodeURIComponent(username)}&email=${encodeURIComponent(email)}`,
     );
@@ -133,6 +176,7 @@ const verifyUserEmail = async (
 
 const resendEmailVerification = async (username: string, email: string) => {
   try {
+    const apiClient = createApiClient();
     const response = await apiClient.post(
       `${API_ENDPOINTS.VERIFICATION_SERVICE}/resend?username=${encodeURIComponent(username)}&email=${encodeURIComponent(email)}`,
     );

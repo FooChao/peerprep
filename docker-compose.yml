@@ -4,7 +4,6 @@
 # Author Review: I validated security and performance of the setup.
 
 # PeerPrep Docker Compose Configuration
-# TODO: when deploying to production, switch to using images from Docker Hub -> using 'image' and 'pull_policy' and remove 'build' sections
 services:
   # API Gateway - Routes all external traffic
   api-gateway:
@@ -24,6 +23,8 @@ services:
       - FRONTEND_URL=http://frontend:3000
       - USER_SERVICE_URL=http://user-service:4000
       - MATCHING_SERVICE_URL=http://matching-service:3002
+      - COLLAB_SERVICE_URL=http://collab-service:4001
+      - FRONTEND_BASE_URL=http://localhost:3000
 
   # Frontend Next.js Application
   # Scalable service with port range mapping
@@ -37,6 +38,9 @@ services:
     ports:
       - "3000:3000" # Expose frontend on localhost:3000
     environment:
+      - API_GATEWAY_BASE_URL=http://localhost
+      - FRONTEND_BASE_URL=http://localhost:3000
+      - USER_SERVICE_URL=http://user-service:4000 
       - NODE_ENV=production # Set Node.js to production mode
 
   user-service:
@@ -53,8 +57,9 @@ services:
     env_file:
       - ./user-service/.env # Environment variables for user-service
     environment:
-      - NODE_ENV=production # Set Node.js to production mode
       - DB_LOCAL_URI=mongodb://root:example@mongodb-user-services:27017 # Override for container
+      - API_GATEWAY_BASE_URL=http://localhost
+      - FRONTEND_BASE_URL=http://localhost:3000
 
   matching-service:
     image: yc17003/matching-service

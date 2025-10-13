@@ -1,2 +1,3 @@
 FROM nginx:latest
-COPY default.conf /etc/nginx/conf.d/default.conf
+# Copy config as template so nginx automatically substitutes environment variables
+COPY default.conf /etc/nginx/templates/default.conf.template
