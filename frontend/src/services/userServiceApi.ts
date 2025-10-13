@@ -53,8 +53,8 @@ const getBaseURL = () => {
       return `${API_GATEWAY_BASE_URL}/api`;
     }
   } else {
-    // Development: Direct to user-service (no Docker containers)
-    return "http://localhost:4000";
+    // Development: Direct to api gateway no weirdness
+    return `${API_GATEWAY_BASE_URL}/api`;
   }
 };
 
