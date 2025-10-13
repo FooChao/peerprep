@@ -2,6 +2,10 @@
 # Tool: ChatGPT (GPT 5.0), date: 2025-09-19
 # Purpose: To understand how to add password to redis container
 # Author Review: I validated security and performance of the setup.
+#
+# Tool: GitHub Copilot (model: Claude Sonnet 4), date: 2025-10-13
+# Purpose: To implement live reload development setup with hybrid architecture
+# Author Review: I validated Docker networking, nodemon configuration, and Windows/WSL2 compatibility.
 
 # =============================================================================
 # PEERPREP DOCKER COMPOSE - HYBRID DEVELOPMENT SETUP
