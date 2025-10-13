@@ -65,7 +65,7 @@ services:
       context: ./api-gateway
       dockerfile: Dockerfile
     ports:
-      - "80:80" # HTTP traffic
+      - "80:80" # Map host port 80 to container port (matches PORT=80 env var)
       - "443:443" # HTTPS traffic (if configured)
     depends_on:
       - user-service
@@ -75,8 +75,9 @@ services:
       - FRONTEND_URL=http://host.docker.internal:3000 # Frontend runs on host via npm dev
       - USER_SERVICE_URL=http://user-service:4000
       - MATCHING_SERVICE_URL=http://matching-service:3002
-      - COLLAB_SERVICE_URL=http://collab-service:4001
+      - COLLAB_SERVICE_URL=http://collab-service:8000
       - FRONTEND_BASE_URL=http://localhost:3000
+      - PORT=80 # Override Dockerfile default for local development
 
     # Frontend Next.js Application
   # Scalable service with port range mapping
