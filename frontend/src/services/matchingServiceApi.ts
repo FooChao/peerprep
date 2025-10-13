@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_GATEWAY_BASE_URL : string = process.env.API_GATEWAY_BASE_URL || "http://localhost";
+const API_GATEWAY_BASE_URL : string = process.env.NEXT_PUBLIC_API_GATEWAY_BASE_URL || "http://localhost";
 
 export interface MatchRequest {
   userId: string;

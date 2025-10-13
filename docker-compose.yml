@@ -90,9 +90,8 @@ services:
     ports:
       - "3000:3000" # Expose frontend on localhost:3000
     environment:
-      - API_GATEWAY_BASE_URL=http://localhost
-      - FRONTEND_BASE_URL=http://localhost:3000
-      - USER_SERVICE_URL=http://user-service:4000 
+      - NEXT_PUBLIC_API_GATEWAY_BASE_URL=http://localhost
+      - NEXT_PUBLIC_USER_SERVICE_URL=http://user-service:4000 
       - NODE_ENV=production # Set Node.js to production mode
       - PORT=3000 # Ensure Next.js listens on port 3000
 
