@@ -74,11 +74,22 @@ services:
       - COLLAB_SERVICE_URL=http://collab-service:4001
       - FRONTEND_BASE_URL=http://localhost:3000
 
-  # Frontend Next.js Application - RUNS VIA NPM DEV (not Docker)
-  # The frontend will be started separately using "npm run dev:frontend"
-  # This allows for optimal Next.js hot reload performance outside of Docker
-  # frontend:
-  #   (Frontend runs via npm dev for better HMR performance)
+    # Frontend Next.js Application
+  # Scalable service with port range mapping
+  frontend:
+    image: honeydews/frontend
+    pull_policy: never
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      target: runner # Production build target
+    ports:
+      - "3000:3000" # Expose frontend on localhost:3000
+    environment:
+      - API_GATEWAY_BASE_URL=http://localhost
+      - FRONTEND_BASE_URL=http://localhost:3000
+      - USER_SERVICE_URL=http://user-service:4000 
+      - NODE_ENV=production # Set Node.js to production mode
 
   # User Service - DEVELOPMENT MODE WITH LIVE RELOAD
   user-service:
