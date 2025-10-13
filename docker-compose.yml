@@ -80,6 +80,9 @@ services:
     build:
       context: ./collab-service
       dockerfile: Dockerfile
+    volumes:
+      - ./collab-service:/app
+    command: npx nodemon server.js
     env_file:
       - ./collab-service/.env
     environment:
