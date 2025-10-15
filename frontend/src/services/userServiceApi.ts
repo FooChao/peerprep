@@ -8,11 +8,13 @@
 // API Configuration for PeerPrep Frontend
 import axios from "axios";
 
-const API_GATEWAY_BASE_URL : string = process.env.NEXT_PUBLIC_API_GATEWAY_BASE_URL || "http://localhost";
+const API_GATEWAY_BASE_URL: string =
+  process.env.NEXT_PUBLIC_API_GATEWAY_BASE_URL || "http://localhost";
 // note that for actual deployment to cloud, we will set it to same as API Gateway URL
 // this is only for local dev with docker-compose
 // because for some weird reason it doesn't work with localhost in middleware
-const USER_SERVICE_URL : string = process.env.NEXT_PUBLIC_USER_SERVICE_URL || "http://user-service:4000";
+const USER_SERVICE_URL: string =
+  process.env.NEXT_PUBLIC_USER_SERVICE_URL || "http://user-service:4000";
 
 // TypeScript interfaces for API responses
 export interface User {

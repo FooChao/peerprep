@@ -1,6 +1,7 @@
 import axios from "axios";
 
-const API_GATEWAY_BASE_URL : string = process.env.NEXT_PUBLIC_API_GATEWAY_BASE_URL || "http://localhost";
+const API_GATEWAY_BASE_URL: string =
+  process.env.NEXT_PUBLIC_API_GATEWAY_BASE_URL || "http://localhost";
 
 export interface MatchRequest {
   userId: string;
@@ -44,7 +45,7 @@ export interface TerminateResponse {
 }
 
 const getBaseURL = () => {
-  return `${API_GATEWAY_BASE_URL}/api`
+  return `${API_GATEWAY_BASE_URL}/api`;
 };
 
 const createApiClient = () =>
@@ -53,7 +54,6 @@ const createApiClient = () =>
     headers: { "Content-Type": "application/json" },
     timeout: 10000,
   });
-
 
 const API_ENDPOINTS = {
   MATCH: "/matching/match",
