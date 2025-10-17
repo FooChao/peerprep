@@ -58,8 +58,9 @@ function initialiseCollabWebsocket(
   cursorCollections: Record<string, monaco.editor.IEditorDecorationsCollection>,
   onLeaveSession: () => void,
 ) {
-  const wsBaseUrl = process.env.NEXT_PUBLIC_COLLAB_WS_URL || "ws://localhost/collab-socket";
-  
+  const wsBaseUrl =
+    process.env.NEXT_PUBLIC_COLLAB_WS_URL || "ws://localhost/collab-socket";
+
   const clientWS: WebSocket = new WebSocket(
     `${wsBaseUrl}/${userId}/${sessionId}`,
   );
