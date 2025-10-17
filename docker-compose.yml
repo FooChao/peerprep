@@ -90,8 +90,6 @@ services:
     ports:
       - "3000:3000" # Expose frontend on localhost:3000
     environment:
-      - NEXT_PUBLIC_API_GATEWAY_BASE_URL=http://localhost
-      - NEXT_PUBLIC_USER_SERVICE_URL=http://user-service:4000 
       - NODE_ENV=production # Set Node.js to production mode
       - PORT=3000 # Ensure Next.js listens on port 3000
 
@@ -115,10 +113,7 @@ services:
       - ./user-service/.env # Environment variables for user-service
     environment:
       - DB_LOCAL_URI=mongodb://root:example@mongodb-user-services:27017 # Override for container
-      - API_GATEWAY_BASE_URL=http://localhost
-      - FRONTEND_BASE_URL=http://localhost:3000
       - NODE_ENV=development # Development mode for better error messages
-      - PORT=4000
     command: ["/bin/sh", "-c", "npm install && npx nodemon --legacy-watch --polling-interval 1000 server.js"] # Install deps and run with polling for Windows/WSL2
 
   # Matching Service - DEVELOPMENT MODE WITH LIVE RELOAD
@@ -140,9 +135,7 @@ services:
     env_file:
       - ./matching-service/.env
     environment:
-      - REDIS_HOST=redis://redis-matching-service:6379
       - NODE_ENV=development # Development mode
-      - PORT=3002
     command: ["/bin/sh", "-c", "npm install && npx nodemon --legacy-watch --polling-interval 1000 server.js"] # Install deps and run with polling for Windows/WSL2
 
   # Collaboration Service - DEVELOPMENT MODE WITH LIVE RELOAD
@@ -164,9 +157,7 @@ services:
     env_file:
       - ./collab-service/.env
     environment:
-      - REDIS_HOST=redis-collab-service
       - NODE_ENV=development # Development mode
-      - PORT=8000
     command: ["/bin/sh", "-c", "npm install && npx nodemon --legacy-watch --polling-interval 1000 server.js"] # Install deps and run with polling for Windows/WSL2
 
   # MongoDB Database for User Services
