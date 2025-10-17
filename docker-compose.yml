@@ -154,7 +154,7 @@ services:
       dockerfile: Dockerfile
       # No target specified - uses default single-stage build
     ports:
-      - "4001:4001" # Expose for direct access during development  
+      - "8000:8000" # Expose for direct access during development  
     volumes:
       # Mount source code for live reload (adjust paths based on actual structure)
       - ./collab-service:/app:cached
