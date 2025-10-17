@@ -13,7 +13,7 @@ FROM node:20-alpine
 
 WORKDIR /app
 
-COPY --from=builder . /app
+COPY --from=builder /app /app
 
 EXPOSE ${PORT}
 
