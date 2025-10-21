@@ -9,7 +9,7 @@ export default function initWebSocketServer() {
 
   //Handles client connection
   webSocketServer.on("connection", (ws, request) => {
-    logger.info("WebsocketServer started");
+    logger.info("WebsocketServer started!");
     initialiseWebSocket(webSocketServer, ws, request, roomToData);
   });
 
@@ -24,6 +24,9 @@ export default function initWebSocketServer() {
     });
   }, 30000);
 
-  webSocketServer.on("close", () => clearInterval(interval));
+  webSocketServer.on("close", () => {
+    logger.info("websocketserver restarted?");
+    clearInterval(interval);
+  });
   return webSocketServer;
 }

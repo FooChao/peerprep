@@ -19,6 +19,7 @@ import {
   handleSocketDisconnection,
 } from "./socketEventHandlers.js";
 
+import logger from "../utils/logger.js";
 //Initialises backend socket events
 function initialiseWebSocket(wss, ws, request, roomToDocMap) {
   const path_params = request.url.split("/");
@@ -32,6 +33,7 @@ function initialiseWebSocket(wss, ws, request, roomToDocMap) {
 
   ws.on("pong", () => {
     ws.isAlive = true;
+    logger.info("Received pong from frontend socket");
   });
 
   ws.on("error", console.error);
@@ -54,6 +56,7 @@ function initialiseWebSocket(wss, ws, request, roomToDocMap) {
   });
 
   ws.on("close", () => {
+    logger.info("websocket on server closed");
     handleSocketDisconnection(ws, wss, roomToDocMap);
   });
 }
