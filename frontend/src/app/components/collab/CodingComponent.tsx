@@ -21,6 +21,7 @@ import {
 } from "./CollabWebSocket";
 import { useUser } from "@/contexts/UserContext";
 import { useRouter } from "next/navigation";
+import ReconnectingWebSocket from "reconnecting-websocket";
 export default function CodingComponent() {
   const [codeContent, setCodeContent] = useState<string>("");
   const [selectedLanguage, setSeletedLanguage] = useState<string>("JavaScript");
@@ -50,14 +51,14 @@ export default function CodingComponent() {
     const binding: MonacoBinding = new MonacoBinding(
       yText,
       editorInstance.getModel()!,
-      new Set([editorInstance]),
+      new Set([editorInstance])
     );
 
     const cursorCollections: Record<
       string,
       monaco.editor.IEditorDecorationsCollection
     > = {};
-    const clientWS: WebSocket = initialiseCollabWebsocket(
+    const clientWS: ReconnectingWebSocket = initialiseCollabWebsocket(
       user_id,
       session_id,
       ydoc,
@@ -65,13 +66,13 @@ export default function CodingComponent() {
       cursorCollections,
       () => {
         router.replace("/match");
-      },
+      }
     );
     registerCursorUpdateHandler(
       user_id,
       editorInstance,
       cursorCollections,
-      clientWS,
+      clientWS
     );
     registerEditorUpdateHandler(ydoc, clientWS);
 

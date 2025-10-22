@@ -10,6 +10,7 @@
 
 import * as Y from "yjs";
 import * as monaco from "monaco-editor";
+import ReconnectingWebSocket from "reconnecting-websocket";
 import {
   initEditor,
   sendEditorState,
@@ -17,24 +18,32 @@ import {
   onEditorChangeHandler,
   onPartnerCursorChangeHandler,
 } from "../../../services/editorSyncHandlers";
+import { throttle } from "lodash";
 import { createInlineStyle } from "@/lib/utils";
 
 //Partner's cursor CSS
 createInlineStyle(
   "remote-cursor",
-  "border-left: 2px solid rgba(255, 64, 11, 1);",
+  "border-left: 2px solid rgba(255, 64, 11, 1);"
 );
 //Current user's cursor CSS
 createInlineStyle(
   "local-cursor",
-  "border-left: 2px solid rgba(46, 216, 246, 1)",
+  "border-left: 2px solid rgba(46, 216, 246, 1)"
 );
 
 //Handle updates made to monaco editor by current user
-function registerEditorUpdateHandler(ydoc: Y.Doc, clientWS: WebSocket) {
-  ydoc.on("update", (update: Uint8Array, origin: string) =>
-    onEditorChangeHandler(update, origin, clientWS),
-  );
+function registerEditorUpdateHandler(
+  ydoc: Y.Doc,
+  clientWS: ReconnectingWebSocket
+) {
+  ydoc.on("update", (update: Uint8Array, origin: string) => {
+    if (origin == "remote") {
+      return;
+    }
+
+    onEditorChangeHandler(update, origin, clientWS);
+  });
 }
 
 //Handle updates made to current user's cursor
@@ -42,11 +51,16 @@ function registerCursorUpdateHandler(
   userId: string,
   editorInstance: monaco.editor.IStandaloneCodeEditor,
   cursorCollections: Record<string, monaco.editor.IEditorDecorationsCollection>,
-  clientWS: WebSocket,
+  clientWS: ReconnectingWebSocket
 ) {
-  editorInstance.onDidChangeCursorSelection((event) =>
-    onCursorChangeHandler(cursorCollections, event, clientWS, userId),
+  const throttledOnCursorChangeHandler = throttle(
+    (event: monaco.editor.ICursorSelectionChangedEvent) => {
+      (onCursorChangeHandler(cursorCollections, event, clientWS, userId),
+        16,
+        { leading: true, trailing: true });
+    }
   );
+  editorInstance.onDidChangeCursorSelection(throttledOnCursorChangeHandler);
 }
 
 //Initialises browser Websocket events
@@ -56,13 +70,13 @@ function initialiseCollabWebsocket(
   ydoc: Y.Doc,
   editorInstance: monaco.editor.IStandaloneCodeEditor,
   cursorCollections: Record<string, monaco.editor.IEditorDecorationsCollection>,
-  onLeaveSession: () => void,
+  onLeaveSession: () => void
 ) {
   const wsBaseUrl =
     process.env.NEXT_PUBLIC_COLLAB_WS_URL || "ws://localhost/collab-socket";
 
-  const clientWS: WebSocket = new WebSocket(
-    `${wsBaseUrl}/${userId}/${sessionId}`,
+  const clientWS: ReconnectingWebSocket = new ReconnectingWebSocket(
+    `${wsBaseUrl}/${userId}/${sessionId}`
   );
 
   clientWS.binaryType = "arraybuffer";
@@ -81,13 +95,13 @@ function initialiseCollabWebsocket(
         onPartnerCursorChangeHandler(
           messageEvent,
           editorInstance,
-          cursorCollections,
+          cursorCollections
         );
         return;
       } else if (payloadObject.type === "sync") {
         const yUpdate: Uint8Array = Buffer.from(
           payloadObject.ydocUpdate,
-          "base64",
+          "base64"
         );
         Y.applyUpdate(ydoc, yUpdate, "remote");
         return;
@@ -107,10 +121,6 @@ function initialiseCollabWebsocket(
       const yUpdate: Uint8Array = new Uint8Array(messageEvent.data);
       Y.applyUpdate(ydoc, yUpdate, "remote");
     }
-  };
-
-  clientWS.onerror = (error) => {
-    console.log(error);
   };
 
   clientWS.onclose = () => {
