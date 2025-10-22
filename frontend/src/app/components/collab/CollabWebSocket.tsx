@@ -124,6 +124,11 @@ function initialiseCollabWebsocket(
   };
 
   clientWS.onclose = () => {
+    const cursorDecorator: monaco.editor.IEditorDecorationsCollection =
+      cursorCollections[userId];
+    if (cursorDecorator) {
+      cursorDecorator.clear();
+    }
     delete cursorCollections[userId];
   };
   return clientWS;
