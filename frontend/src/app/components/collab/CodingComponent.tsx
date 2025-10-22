@@ -74,7 +74,7 @@ export default function CodingComponent() {
       cursorCollections,
       clientWS
     );
-    registerEditorUpdateHandler(ydoc, clientWS);
+    registerEditorUpdateHandler(ydoc, clientWS, user_id, editorInstance);
 
     return () => {
       console.log("remove client websocket, binding and ydoc");

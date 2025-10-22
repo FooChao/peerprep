@@ -100,10 +100,23 @@ function parseCursorUpdate(message) {
   return null;
 }
 
+function parseDocUpdate(message) {
+  const text = message.toString();
+  if (text.startsWith("{")) {
+    const data = JSON.parse(text);
+    if (data.type === "doc_update") {
+      const ydocUpdate = Buffer.from(data.ydocUpdate, "base64");
+      return ydocUpdate;
+    }
+  }
+  return null;
+}
+
 export {
   handleSocketConnection,
   parseCursorUpdate,
   handleInitialDocSync,
   broadcastToRoom,
   handleSocketDisconnection,
+  parseDocUpdate,
 };

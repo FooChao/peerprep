@@ -35,14 +35,16 @@ createInlineStyle(
 //Handle updates made to monaco editor by current user
 function registerEditorUpdateHandler(
   ydoc: Y.Doc,
-  clientWS: ReconnectingWebSocket
+  clientWS: ReconnectingWebSocket,
+  userId: string,
+  editor: monaco.editor.IStandaloneCodeEditor
 ) {
   ydoc.on("update", (update: Uint8Array, origin: string) => {
     if (origin == "remote") {
       return;
     }
 
-    onEditorChangeHandler(update, origin, clientWS);
+    onEditorChangeHandler(update, origin, clientWS, userId, editor);
   });
 }
 
@@ -53,14 +55,9 @@ function registerCursorUpdateHandler(
   cursorCollections: Record<string, monaco.editor.IEditorDecorationsCollection>,
   clientWS: ReconnectingWebSocket
 ) {
-  const throttledOnCursorChangeHandler = throttle(
-    (event: monaco.editor.ICursorSelectionChangedEvent) => {
-      (onCursorChangeHandler(cursorCollections, event, clientWS, userId),
-        16,
-        { leading: true, trailing: true });
-    }
+  editorInstance.onDidChangeCursorSelection((event) =>
+    onCursorChangeHandler(cursorCollections, event, clientWS, userId)
   );
-  editorInstance.onDidChangeCursorSelection(throttledOnCursorChangeHandler);
 }
 
 //Initialises browser Websocket events
@@ -93,7 +90,7 @@ function initialiseCollabWebsocket(
 
       if (payloadObject.type === "cursor" && payloadObject.userId !== userId) {
         onPartnerCursorChangeHandler(
-          messageEvent,
+          JSON.parse(messageEvent.data),
           editorInstance,
           cursorCollections
         );
@@ -115,6 +112,18 @@ function initialiseCollabWebsocket(
         delete cursorCollections[disconnectedUser];
       } else if (payloadObject.type === "end") {
         onLeaveSession();
+      } else if (payloadObject.type == "doc_update") {
+        const yUpdate: Uint8Array = Buffer.from(
+          payloadObject.ydocUpdate,
+          "base64"
+        );
+        Y.applyUpdate(ydoc, yUpdate, "remote");
+        const partnerCursorUpdate = payloadObject.cursorUpdate;
+        onPartnerCursorChangeHandler(
+          partnerCursorUpdate,
+          editorInstance,
+          cursorCollections
+        );
       }
       //bufferArray Type
     } else {

@@ -12,6 +12,7 @@
 
 import * as Y from "yjs";
 import {
+  parseDocUpdate,
   handleSocketConnection,
   parseCursorUpdate,
   handleInitialDocSync,
@@ -51,9 +52,12 @@ function initialiseWebSocket(wss, ws, request, roomToDocMap) {
       return;
     }
 
-    const yUpdate = new Uint8Array(update);
-    Y.applyUpdate(doc, yUpdate);
-    broadcastToRoom(wss, ws, roomId, yUpdate);
+    // const yUpdate = new Uint8Array(update);
+    const yUpdate = parseDocUpdate(update);
+    if (yUpdate !== null) {
+      Y.applyUpdate(doc, yUpdate);
+      broadcastToRoom(wss, ws, roomId, update.toString());
+    }
   });
 
   ws.on("close", () => {

@@ -19,9 +19,15 @@ interface CursorUpdatePayload extends BasePayload {
   selection: CursorSelection;
 }
 
-interface editorSyncPayload extends BasePayload {
+interface EditorSyncPayload extends BasePayload {
   type: "sync";
   ydocState: string;
+}
+
+interface EditorDocUpdatePayload extends BasePayload {
+  type: "doc_update";
+  ydocUpdate: string;
+  cursorUpdate: CursorUpdatePayload;
 }
 
 //Set up initial cursor position as a decoration.
@@ -53,7 +59,7 @@ function sendEditorState(
   const initialState: Uint8Array = Y.encodeStateVector(ydoc);
   const stateAsString: string = Buffer.from(initialState).toString("base64");
 
-  const payload: editorSyncPayload = {
+  const payload: EditorSyncPayload = {
     type: "sync",
     userId: userId,
     ydocState: stateAsString,
@@ -62,14 +68,42 @@ function sendEditorState(
   ws.send(JSON.stringify(payload));
 }
 
-//Send changes made on local code editor to backend socket
+//Send both doc and cursor changes made on local code editor to backend socket
 function onEditorChangeHandler(
   update: Uint8Array,
   origin: string,
-  clientWS: ReconnectingWebSocket
+  clientWS: ReconnectingWebSocket,
+  userId: string,
+  editorInstance: monaco.editor.IStandaloneCodeEditor
 ) {
+  const selection: monaco.Selection | null = editorInstance.getSelection();
+  const cursorUpdate: CursorUpdatePayload = {
+    type: "cursor",
+    userId: userId,
+    selection: selection
+      ? {
+          startLineNumber: selection.startLineNumber,
+          startColumn: selection.startColumn,
+          endLineNumber: selection.endLineNumber,
+          endColumn: selection.endColumn,
+        }
+      : {
+          startLineNumber: 0,
+          startColumn: 0,
+          endLineNumber: 0,
+          endColumn: 0,
+        },
+  };
+
   if (origin != "remote" && clientWS.readyState === WebSocket.OPEN) {
-    clientWS.send(update);
+    const updateAsString: string = Buffer.from(update).toString("base64");
+    const payload: EditorDocUpdatePayload = {
+      type: "doc_update",
+      userId: userId,
+      ydocUpdate: updateAsString,
+      cursorUpdate: cursorUpdate,
+    };
+    clientWS.send(JSON.stringify(payload));
   }
 }
 
@@ -113,12 +147,10 @@ function onCursorChangeHandler(
 
 //Receives partner cursor positions and set partner cursor decoration
 function onPartnerCursorChangeHandler(
-  messageEvent: MessageEvent,
+  data: CursorUpdatePayload,
   editorInstance: monaco.editor.IStandaloneCodeEditor,
   cursorCollections: Record<string, monaco.editor.IEditorDecorationsCollection>
 ) {
-  const data: CursorUpdatePayload = JSON.parse(messageEvent.data);
-
   if (data.type === "cursor") {
     if (!cursorCollections[data.userId]) {
       cursorCollections[data.userId] =
